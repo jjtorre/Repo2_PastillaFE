@@ -8,20 +8,11 @@ import { View, Text, FlatList, Pressable, StyleSheet, SafeAreaView } from 'react
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenHeader from '../components/ScreenHeader';
-import { getMedications } from '../storage';
+import { getMedications, computeStatus } from '../storage';
 import { colors, spacing, radius, fontSize } from '../theme';
 import type { Medication, MedicationStatus, RootStackParamList } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'CaregiverView'>;
-
-function computeStatus(med: Medication): MedicationStatus {
-  if (med.status === 'taken') return 'taken';
-  const now = new Date();
-  const [hours, minutes] = med.time.split(':').map(Number);
-  const doseTime = new Date();
-  doseTime.setHours(hours, minutes, 0, 0);
-  return now > doseTime ? 'late' : 'pending';
-}
 
 const STATUS_ORDER: Record<MedicationStatus, number> = { late: 0, pending: 1, taken: 2 };
 

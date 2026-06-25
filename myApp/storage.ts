@@ -4,9 +4,37 @@
 // compartido por la familia (decisión validada con el PO).
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { Medication, NewMedicationInput } from './types';
+import type { Medication, MedicationStatus, NewMedicationInput } from './types';
 
 const MEDICATIONS_KEY = '@myApp/medications';
+
+function isSameDay(a: Date, b: Date): boolean {
+  return (
+    a.getFullYear() === b.getFullYear() &&
+    a.getMonth() === b.getMonth() &&
+    a.getDate() === b.getDate()
+  );
+}
+
+// Calcula el estado real de un medicamento para "ahora", sin confiar
+// ciegamente en el campo status guardado. Un medicamento marcado como
+// "taken" solo se queda así si lastTakenAt fue HOY — si fue un día
+// anterior, se recalcula como pending/late según la hora programada.
+// Esto evita que la dosis de ayer siga apareciendo como "tomada" hoy.
+export function computeStatus(med: Medication): MedicationStatus {
+  const now = new Date();
+
+  if (med.status === 'taken' && med.lastTakenAt) {
+    const takenAt = new Date(med.lastTakenAt);
+    if (isSameDay(takenAt, now)) return 'taken';
+  }
+
+  const [hours, minutes] = med.time.split(':').map(Number);
+  const doseTime = new Date();
+  doseTime.setHours(hours, minutes, 0, 0);
+
+  return now > doseTime ? 'late' : 'pending';
+}
 
 export async function getMedications(): Promise<Medication[]> {
   try {

@@ -8,22 +8,11 @@ import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenHeader from '../components/ScreenHeader';
 import MedicationCard from '../components/MedicationCard';
-import { getMedications, updateMedication } from '../storage';
+import { getMedications, updateMedication, computeStatus } from '../storage';
 import { colors, spacing, radius, fontSize } from '../theme';
 import type { Medication, RootStackParamList } from '../types';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'MedicationList'>;
-
-function computeStatus(med: Medication): Medication['status'] {
-  if (med.status === 'taken') return 'taken';
-
-  const now = new Date();
-  const [hours, minutes] = med.time.split(':').map(Number);
-  const doseTime = new Date();
-  doseTime.setHours(hours, minutes, 0, 0);
-
-  return now > doseTime ? 'late' : 'pending';
-}
 
 export default function MedicationListScreen({ navigation }: Props) {
   const [medications, setMedications] = useState<Medication[]>([]);
