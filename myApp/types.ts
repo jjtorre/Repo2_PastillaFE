@@ -25,4 +25,5 @@ export type RootStackParamList = {
   MedicationDetail: { id: string };
   EditMedication: { id: string };
   CaregiverView: undefined;
+  InviteCaregiver: undefined;
 };

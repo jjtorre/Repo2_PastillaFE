@@ -92,6 +92,15 @@ export default function CaregiverViewScreen({ navigation }: Props) {
         />
 
         <Pressable
+          style={styles.primaryButton}
+          onPress={() => navigation.navigate('InviteCaregiver')}
+          accessibilityRole="button"
+          accessibilityLabel="Invitar a un cuidador a ver esto desde su computadora"
+        >
+          <Text style={styles.primaryButtonText}>Invitar a un cuidador</Text>
+        </Pressable>
+
+        <Pressable
           style={styles.linkButton}
           onPress={() => navigation.navigate('MedicationList')}
           accessibilityRole="button"
@@ -160,6 +169,18 @@ const styles = StyleSheet.create({
     color: colors.textSecondary,
     textAlign: 'center',
     marginTop: spacing.xl,
+  },
+  primaryButton: {
+    backgroundColor: colors.primary,
+    borderRadius: radius.lg,
+    paddingVertical: spacing.md + 2,
+    alignItems: 'center',
+    marginTop: spacing.sm,
+  },
+  primaryButtonText: {
+    color: colors.primaryText,
+    fontSize: fontSize.title,
+    fontWeight: '600',
   },
   linkButton: {
     borderWidth: 1,

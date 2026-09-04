@@ -13,7 +13,9 @@
 // Requiere activar "Anonymous sign-ins" en el dashboard de Supabase
 // (Authentication > Sign In / Providers).
 
-import { supabase } from './supabase';
+import * as Crypto from 'expo-crypto';
+import NetInfo from '@react-native-community/netinfo';
+import { supabase, isSupabaseConfigured } from './supabase';
 import { getHouseholdId, setHouseholdId } from './local';
 
 export async function ensureSession(): Promise<string | null> {
@@ -67,25 +69,66 @@ export async function ensureHousehold(): Promise<string | null> {
   return id;
 }
 
+// Alfabeto de 32 simbolos SIN I, O, 0 ni 1: el paciente va a dictar este
+// codigo por telefono a su cuidador, y esos cuatro son los que se confunden.
+const INVITE_ALPHABET = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const INVITE_LENGTH = 6;
+
+// 32 divide exactamente a 256, asi que "byte % 32" reparte los simbolos de
+// forma uniforme. Con un alfabeto de otro tamano habria sesgo hacia los
+// primeros caracteres.
+function generateCode(): string {
+  const bytes = Crypto.getRandomBytes(INVITE_LENGTH);
+  return Array.from(bytes, (b) => INVITE_ALPHABET[b % INVITE_ALPHABET.length]).join('');
+}
+
+export type InviteResult =
+  | { ok: true; code: string; expiresAt: string }
+  | { ok: false; reason: 'sin-configurar' | 'sin-red' | 'error' };
+
 // Genera un codigo para que el cuidador se una al hogar desde la web.
-export async function createInviteCode(): Promise<string | null> {
-  const householdId = await getHouseholdId();
-  if (!householdId) return null;
+//
+// A diferencia del resto de escrituras de la app, esta NO se encola para
+// sincronizar despues: un codigo que el paciente lee en pantalla tiene que
+// existir ya en el servidor, o el cuidador lo escribiria y no funcionaria.
+// Por eso exige red y falla de forma visible en vez de silenciosa.
+export async function createInviteCode(): Promise<InviteResult> {
+  if (!isSupabaseConfigured) return { ok: false, reason: 'sin-configurar' };
 
-  // 6 caracteres, sin I/O/0/1 para que nadie los confunda al dictarlos.
-  const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  const code = Array.from(
-    { length: 6 },
-    () => alphabet[Math.floor(Math.random() * alphabet.length)]
-  ).join('');
+  const net = await NetInfo.fetch();
+  if (!net.isConnected) return { ok: false, reason: 'sin-red' };
 
-  const { error } = await supabase
-    .from('household_invites')
-    .insert({ code, household_id: householdId, role: 'caregiver' });
+  const userId = await ensureSession();
+  if (!userId) return { ok: false, reason: 'error' };
 
-  if (error) {
-    console.warn('No se pudo crear la invitacion:', error.message);
-    return null;
+  // ensureHousehold y no getHouseholdId: si el paciente nunca ha sincronizado,
+  // todavia no existe hogar al que invitar y hay que crearlo ahora.
+  const householdId = await ensureHousehold();
+  if (!householdId) return { ok: false, reason: 'error' };
+
+  // El codigo es la clave primaria de la tabla. Con 32^6 combinaciones la
+  // colision es improbable, pero no imposible, y perder la invitacion por eso
+  // seria absurdo: se reintenta con un codigo nuevo.
+  for (let intento = 0; intento < 5; intento++) {
+    const code = generateCode();
+
+    const { data, error } = await supabase
+      .from('household_invites')
+      .insert({ code, household_id: householdId, role: 'caregiver', created_by: userId })
+      .select('code, expires_at')
+      .single();
+
+    if (!error && data) {
+      return { ok: true, code: data.code, expiresAt: data.expires_at };
+    }
+
+    // 23505 = unique_violation. Cualquier otro error no se arregla
+    // reintentando, asi que se corta.
+    if (error && error.code !== '23505') {
+      console.warn('No se pudo crear la invitacion:', error.message);
+      return { ok: false, reason: 'error' };
+    }
   }
-  return code;
+
+  return { ok: false, reason: 'error' };
 }

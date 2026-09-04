@@ -15,6 +15,7 @@ import MedicationListScreen from './screens/MedicationListScreen';
 import AddMedicationScreen from './screens/AddMedicationScreen';
 import MedicationDetailScreen from './screens/MedicationDetailScreen';
 import CaregiverViewScreen from './screens/CaregiverViewScreen';
+import InviteCaregiverScreen from './screens/InviteCaregiverScreen';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -35,6 +36,7 @@ export default function App() {
         <Stack.Screen name="MedicationDetail" component={MedicationDetailScreen} />
         <Stack.Screen name="EditMedication" component={AddMedicationScreen} />
         <Stack.Screen name="CaregiverView" component={CaregiverViewScreen} />
+        <Stack.Screen name="InviteCaregiver" component={InviteCaregiverScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
