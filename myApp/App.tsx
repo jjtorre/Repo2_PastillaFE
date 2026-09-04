@@ -6,9 +6,10 @@
 // "EditMedication" NO es un archivo nuevo, reutiliza AddMedicationScreen.tsx.
 // RootStackParamList (en types.ts) tipa cada ruta y sus parámetros.
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { startBackgroundSync } from './lib/sync';
 
 import MedicationListScreen from './screens/MedicationListScreen';
 import AddMedicationScreen from './screens/AddMedicationScreen';
@@ -19,6 +20,10 @@ import type { RootStackParamList } from './types';
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export default function App() {
+  // Sincroniza al arrancar, al recuperar red y al volver del segundo plano.
+  // Nada de la UI espera a esto: si no hay internet, la app funciona igual.
+  useEffect(() => startBackgroundSync(), []);
+
   return (
     <NavigationContainer>
       <Stack.Navigator
