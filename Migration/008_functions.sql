@@ -36,6 +36,14 @@ end;
 $fn$;
 
 -- El cuidador canjea el codigo desde la web y queda unido al hogar.
+--
+-- ES IDEMPOTENTE: canjear dos veces el mismo codigo desde la misma cuenta
+-- devuelve el hogar sin error. Recargar la pagina o reintentar tras un fallo
+-- de red no debe parecerle al cuidador que su codigo es invalido.
+--
+-- Los tres motivos de fallo se distinguen a proposito. Un unico mensaje
+-- "invalida o expirada" obligaria al cuidador a adivinar si se equivoco al
+-- teclear, si el codigo ya lo uso otra persona o si caduco.
 create or replace function public.redeem_invite(p_code text)
 returns uuid
 language plpgsql
@@ -51,13 +59,35 @@ begin
 
   -- FOR UPDATE bloquea la fila: dos canjes simultaneos del mismo codigo no
   -- pueden colarse a la vez.
+  --
+  -- La busqueda NO filtra por redeemed_at ni expires_at: hay que recuperar la
+  -- fila para poder decidir si este usuario ya es miembro (caso idempotente)
+  -- antes de rechazarla por usada o caducada.
   select * into v_invite
   from public.household_invites
-  where code = p_code and redeemed_at is null and expires_at > now()
+  where code = p_code
   for update;
 
   if v_invite.code is null then
-    raise exception 'invitacion invalida o expirada';
+    raise exception 'invitacion invalida';
+  end if;
+
+  -- Camino idempotente: ya perteneces a este hogar, no hay nada que hacer.
+  -- Va ANTES de las validaciones porque un codigo que tu mismo canjeaste
+  -- figura como usado, y rechazarlo seria absurdo.
+  if exists (
+    select 1 from public.household_members
+    where household_id = v_invite.household_id and user_id = auth.uid()
+  ) then
+    return v_invite.household_id;
+  end if;
+
+  if v_invite.redeemed_at is not null then
+    raise exception 'invitacion ya utilizada';
+  end if;
+
+  if v_invite.expires_at <= now() then
+    raise exception 'invitacion expirada';
   end if;
 
   insert into public.household_members (household_id, user_id, role)
