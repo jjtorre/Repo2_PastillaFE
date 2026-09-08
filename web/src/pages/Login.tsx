@@ -7,7 +7,11 @@
 import { useState, type FormEvent } from 'react';
 import { supabase } from '../lib/supabase';
 
-export default function Login() {
+interface Props {
+  onBack: () => void;
+}
+
+export default function Login({ onBack }: Props) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -84,6 +88,10 @@ export default function Login() {
         }}
       >
         {mode === 'signin' ? 'No tengo cuenta todavía' : 'Ya tengo cuenta'}
+      </button>
+
+      <button type="button" className="link" onClick={onBack}>
+        Volver al inicio
       </button>
     </div>
   );

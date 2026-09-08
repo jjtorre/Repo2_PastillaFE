@@ -12,6 +12,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase, isConfigured } from './lib/supabase';
+import Landing from './pages/Landing';
 import Login from './pages/Login';
 import JoinHousehold from './pages/JoinHousehold';
 import Dashboard from './pages/Dashboard';
@@ -20,6 +21,9 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [hasHousehold, setHasHousehold] = useState<boolean | null>(null);
   const [ready, setReady] = useState(false);
+  // Un visitante sin sesión ve la landing; el login aparece solo cuando lo
+  // pide. Un formulario como página de inicio no explica qué es esto.
+  const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
     if (!isConfigured) {
@@ -81,7 +85,13 @@ export default function App() {
     );
   }
 
-  if (!session) return <Login />;
+  if (!session) {
+    return showLogin ? (
+      <Login onBack={() => setShowLogin(false)} />
+    ) : (
+      <Landing onEnter={() => setShowLogin(true)} />
+    );
+  }
 
   if (hasHousehold === null) {
     return (
