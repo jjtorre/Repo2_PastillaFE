@@ -1,0 +1,104 @@
+name: Web del cuidador
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - '.github/workflows/ci-web.yml'
+  pull_request:
+    paths:
+      - 'web/**'
+      - '.github/workflows/ci-web.yml'
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    name: Lint y build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      # No necesita las variables VITE_*: sin ellas la app compila igual y
+      # muestra el aviso de "falta configurar". Los valores reales los inyecta
+      # Vercel en el despliegue.
+      - name: Build de produccion
+        run: npm run build
+
+  # ---------------------------------------------------------------------------
+  # CD — OPCIONAL Y DORMIDO POR DEFECTO
+  #
+  # Vercel ya despliega solo en cada push si conectaste el repo, y esa es la
+  # opcion recomendada: cero configuracion.
+  #
+  # Este job existe para el caso en que quieras que el despliegue ESPERE a que
+  # el CI pase. Para activarlo:
+  #
+  #   1. Anade los secretos VERCEL_TOKEN, VERCEL_ORG_ID y VERCEL_PROJECT_ID
+  #      en Settings > Secrets and variables > Actions.
+  #   2. Desactiva el despliegue automatico de Vercel en
+  #      Project Settings > Git, o tendras DOS despliegues por push.
+  #
+  # Sin el secreto se salta limpiamente y deja el workflow en verde, en vez de
+  # dejar el repositorio en rojo permanente.
+  # ---------------------------------------------------------------------------
+  desplegar:
+    name: Desplegar en Vercel
+    needs: verificar
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Hay secretos configurados?
+        id: secretos
+        env:
+          TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          if [ -n "$TOKEN" ]; then
+            echo "activo=si" >> "$GITHUB_OUTPUT"
+          else
+            echo "activo=no" >> "$GITHUB_OUTPUT"
+            echo "Sin VERCEL_TOKEN: se omite el despliegue desde Actions." >> "$GITHUB_STEP_SUMMARY"
+            echo "Si conectaste el repo a Vercel, el despliegue lo hace Vercel." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - uses: actions/setup-node@v4
+        if: steps.secretos.outputs.activo == 'si'
+        with:
+          node-version: '22'
+
+      - name: Instalar Vercel CLI
+        if: steps.secretos.outputs.activo == 'si'
+        run: npm install --global vercel@latest
+
+      - name: Desplegar a produccion
+        if: steps.secretos.outputs.activo == 'si'
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+          TOKEN: ${{ secrets.VERCEL_TOKEN }}
+        run: |
+          vercel pull --yes --environment=production --token="$TOKEN"
+          vercel build --prod --token="$TOKEN"
+          vercel deploy --prebuilt --prod --token="$TOKEN"

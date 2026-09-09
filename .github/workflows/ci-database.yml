@@ -1,0 +1,85 @@
+name: Base de datos
+
+# El trabajo mas valioso del pipeline: levanta un PostgreSQL vacio, aplica los
+# scripts DOS VECES para demostrar que son idempotentes, y ejecuta las pruebas
+# de comportamiento.
+#
+# Sin esto, una regresion en el RLS o en la idempotencia de record_dose no se
+# notaria hasta que un paciente viera el inventario descuadrado.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'Migration/**'
+      - '.github/workflows/ci-database.yml'
+  pull_request:
+    paths:
+      - 'Migration/**'
+      - '.github/workflows/ci-database.yml'
+  workflow_dispatch:
+
+jobs:
+  esquema:
+    name: Migraciones idempotentes y pruebas
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        # Misma version mayor que usa Supabase. Importa: las vistas necesitan
+        # security_invoker, que no existe antes de PostgreSQL 15.
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: app
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+
+    env:
+      PGHOST: localhost
+      PGUSER: postgres
+      PGPASSWORD: postgres
+      PGDATABASE: app
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Asegurar cliente de PostgreSQL
+        run: command -v psql || (sudo apt-get update && sudo apt-get install -y postgresql-client)
+
+      - name: Objetos que en Supabase ya existen
+        run: psql -v ON_ERROR_STOP=1 -q -f Migration/tests/00_stub_supabase.sql
+
+      - name: Primera pasada
+        run: |
+          for f in Migration/0*.sql; do
+            echo "::group::$(basename "$f")"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+            echo "::endgroup::"
+          done
+
+      # Si algun script no fuera idempotente, aqui reventaria: "already exists"
+      # en una tabla, un indice duplicado o una policy repetida.
+      - name: Segunda pasada (prueba de idempotencia)
+        run: |
+          for f in Migration/0*.sql; do
+            echo "::group::$(basename "$f")"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+            echo "::endgroup::"
+          done
+
+      - name: Datos de prueba
+        run: psql -v ON_ERROR_STOP=1 -q -f Migration/tests/01_fixtures.sql
+
+      - name: Pruebas de comportamiento
+        run: |
+          for f in Migration/tests/0[234]_*.sql; do
+            echo "::group::$(basename "$f")"
+            psql -v ON_ERROR_STOP=1 -q -f "$f"
+            echo "::endgroup::"
+          done

@@ -20,16 +20,15 @@ import Dashboard from './pages/Dashboard';
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const [hasHousehold, setHasHousehold] = useState<boolean | null>(null);
-  const [ready, setReady] = useState(false);
+  // Sin credenciales no hay sesión que consultar, así que ya está listo desde
+  // el primer render. Derivarlo aquí evita un setState dentro del efecto.
+  const [ready, setReady] = useState(!isConfigured);
   // Un visitante sin sesión ve la landing; el login aparece solo cuando lo
   // pide. Un formulario como página de inicio no explica qué es esto.
   const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
-    if (!isConfigured) {
-      setReady(true);
-      return;
-    }
+    if (!isConfigured) return;
 
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);

@@ -1,0 +1,42 @@
+name: App movil
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'myApp/**'
+      - '.github/workflows/ci-app.yml'
+  pull_request:
+    paths:
+      - 'myApp/**'
+      - '.github/workflows/ci-app.yml'
+  workflow_dispatch:
+
+jobs:
+  verificar:
+    name: Tipos y empaquetado
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: myApp
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: myApp/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Comprobacion de tipos
+        run: npm run ts
+
+      # tsc no detecta un import que no resuelve en tiempo de ejecucion ni un
+      # modulo nativo mal declarado. Empaquetar con Metro si: es la diferencia
+      # entre "compila" y "arranca en el telefono".
+      - name: El bundle de Metro resuelve
+        run: npx expo export --platform android --output-dir "${RUNNER_TEMP}/bundle"

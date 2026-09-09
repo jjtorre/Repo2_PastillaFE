@@ -109,6 +109,44 @@ que es justo lo que el cuidador necesita consultar.
 horaria y `household_today()` la aplica. Con UTC−6, derivar el día desde UTC
 guardaría toda dosis tomada después de las 6pm con la fecha del día siguiente.
 
+## Pruebas
+
+`tests/` contiene la verificación de comportamiento que ejecuta CI en cada
+cambio de esta carpeta. **No se ejecutan en Supabase**: `00_stub_supabase.sql`
+fabrica `auth.users`, `auth.uid()` y el rol `authenticated`, que en Supabase
+ya existen.
+
+| Archivo | Qué protege |
+|---|---|
+| `00_stub_supabase.sql` | Objetos que aporta Supabase, para poder probar en un Postgres limpio |
+| `01_fixtures.sql` | Hogar, paciente, cuidador, medicamento e invitaciones, con UUID fijos |
+| `02_doses.sql` | Que un reintento no descuente inventario dos veces, y que el día salga de la zona horaria del hogar |
+| `03_invites.sql` | Que canjear el mismo código dos veces no falle, y que los tres motivos de rechazo se distingan |
+| `04_rls.sql` | Que un usuario ajeno no vea ni una fila, tampoco a través de las vistas |
+
+Las pruebas corren como rol `authenticated`, **nunca** como `postgres`: el
+superusuario se salta el RLS, así que `04_rls.sql` daría verde siempre.
+
+### Ejecutarlas en tu máquina
+
+```bash
+docker run -d --name pastilla_test -e POSTGRES_PASSWORD=pw -e POSTGRES_DB=app postgres:15
+
+P() { docker exec -i pastilla_test psql -U postgres -d app -v ON_ERROR_STOP=1 -q; }
+
+P < Migration/tests/00_stub_supabase.sql
+for f in Migration/0*.sql; do P < "$f"; done      # primera pasada
+for f in Migration/0*.sql; do P < "$f"; done      # segunda: idempotencia
+P < Migration/tests/01_fixtures.sql
+for f in Migration/tests/0[234]_*.sql; do P < "$f"; done
+
+docker rm -f pastilla_test
+```
+
+Cualquier fallo aborta con código distinto de cero. Para comprobar que las
+pruebas de verdad muerden, desactiva el RLS de una tabla y vuelve a correr
+`04_rls.sql`: debe fallar con «FUGA DE DATOS».
+
 ## Nota sobre idempotencia
 
 | Objeto | Técnica |
