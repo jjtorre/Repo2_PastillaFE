@@ -12,10 +12,10 @@ import {
   Text,
   Pressable,
   StyleSheet,
-  SafeAreaView,
   ActivityIndicator,
   Share,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenHeader from '../components/ScreenHeader';
 import { createInviteCode, type InviteResult } from '../lib/session';
@@ -69,7 +69,7 @@ export default function InviteCaregiverScreen({ navigation }: Props) {
     : null;
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['bottom', 'left', 'right']}>
       <ScreenHeader
         eyebrow="Cuidador"
         title="Invitar a un cuidador"

@@ -4,7 +4,8 @@
 // storage local que MedicationListScreen, destacando lo atrasado primero.
 
 import React, { useState, useCallback } from 'react';
-import { View, Text, FlatList, Pressable, StyleSheet, SafeAreaView } from 'react-native';
+import { View, Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenHeader from '../components/ScreenHeader';
@@ -35,7 +36,7 @@ export default function CaregiverViewScreen({ navigation }: Props) {
   const lateOnes = medications.filter((m) => m.status === 'late');
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['bottom', 'left', 'right']}>
       <ScreenHeader eyebrow="Vista de cuidador" title="Estado del día" onBack={() => navigation.goBack()} />
 
       <View style={styles.content}>

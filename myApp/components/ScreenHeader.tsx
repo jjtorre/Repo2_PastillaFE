@@ -1,8 +1,13 @@
 // components/ScreenHeader.tsx
 // Encabezado oscuro reutilizable. Si se pasa onBack, muestra flecha de regreso.
+//
+// El encabezado se dibuja DEBAJO de la barra de estado a propósito y se hace
+// más alto para compensarla. Así el verde oscuro llena esa franja y el reloj
+// del sistema queda sobre su propio fondo, en vez de encima del título.
 
 import React, { type ReactNode } from 'react';
 import { View, Text, Pressable, StyleSheet } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { colors, spacing, fontSize } from '../theme';
 
 interface ScreenHeaderProps {
@@ -13,8 +18,10 @@ interface ScreenHeaderProps {
 }
 
 export default function ScreenHeader({ title, eyebrow, onBack, rightAction }: ScreenHeaderProps) {
+  const insets = useSafeAreaInsets();
+
   return (
-    <View style={styles.header}>
+    <View style={[styles.header, { paddingTop: insets.top + spacing.lg }]}>
       <View style={styles.left}>
         {onBack && (
           <Pressable onPress={onBack} accessibilityRole="button" accessibilityLabel="Regresar" hitSlop={8}>

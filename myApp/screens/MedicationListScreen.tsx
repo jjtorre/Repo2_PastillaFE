@@ -3,7 +3,8 @@
 // Historia 11: marcar como tomado.
 
 import React, { useState, useCallback } from 'react';
-import { Text, FlatList, Pressable, StyleSheet, SafeAreaView } from 'react-native';
+import { Text, FlatList, Pressable, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenHeader from '../components/ScreenHeader';
@@ -44,7 +45,7 @@ export default function MedicationListScreen({ navigation }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['bottom', 'left', 'right']}>
       <ScreenHeader
         eyebrow="Hola"
         title="Mis medicamentos"

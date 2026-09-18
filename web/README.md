@@ -7,7 +7,7 @@ Vite + React + TypeScript. Consume el mismo proyecto de Supabase que la app
 móvil de [`../myApp`](../myApp), con la misma clave anon.
 
 ---
-
+LEARN-CAP-C366ADC1
 ## Puesta en marcha
 
 Requiere que el esquema esté aplicado: ver [`../Migration/README.md`](../Migration/README.md).

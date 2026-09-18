@@ -2,7 +2,8 @@
 // Épica 1, historias 8, 9, 11: eliminar, editar y marcar como tomado.
 
 import React, { useState, useCallback } from 'react';
-import { View, Text, Pressable, StyleSheet, SafeAreaView, Alert } from 'react-native';
+import { View, Text, Pressable, StyleSheet, Alert } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenHeader from '../components/ScreenHeader';
@@ -79,7 +80,7 @@ export default function MedicationDetailScreen({ navigation, route }: Props) {
   };
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['bottom', 'left', 'right']}>
       <ScreenHeader
         title={medication.name}
         onBack={() => navigation.goBack()}

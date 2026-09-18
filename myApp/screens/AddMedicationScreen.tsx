@@ -9,10 +9,10 @@ import {
   TextInput,
   Pressable,
   StyleSheet,
-  SafeAreaView,
   ScrollView,
   Platform,
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import DateTimePicker, { type DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import ScreenHeader from '../components/ScreenHeader';
@@ -98,7 +98,7 @@ export default function AddMedicationScreen({ navigation, route }: Props) {
   if (!loaded) return null;
 
   return (
-    <SafeAreaView style={styles.screen}>
+    <SafeAreaView style={styles.screen} edges={['bottom', 'left', 'right']}>
       <ScreenHeader
         title={isEditing ? 'Editar receta' : 'Nuevo medicamento'}
         onBack={() => navigation.goBack()}

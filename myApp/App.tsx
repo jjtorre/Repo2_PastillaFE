@@ -9,6 +9,8 @@
 import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { StatusBar } from 'expo-status-bar';
 import { startBackgroundSync } from './lib/sync';
 
 import MedicationListScreen from './screens/MedicationListScreen';
@@ -26,18 +28,26 @@ export default function App() {
   useEffect(() => startBackgroundSync(), []);
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName="MedicationList"
-        screenOptions={{ headerShown: false }}
-      >
-        <Stack.Screen name="MedicationList" component={MedicationListScreen} />
-        <Stack.Screen name="AddMedication" component={AddMedicationScreen} />
-        <Stack.Screen name="MedicationDetail" component={MedicationDetailScreen} />
-        <Stack.Screen name="EditMedication" component={AddMedicationScreen} />
-        <Stack.Screen name="CaregiverView" component={CaregiverViewScreen} />
-        <Stack.Screen name="InviteCaregiver" component={InviteCaregiverScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    // SafeAreaProvider mide las barras del sistema y publica sus medidas por
+    // contexto. Sin él, useSafeAreaInsets() devuelve ceros y todo el contenido
+    // queda por debajo del reloj y de los botones de Android.
+    <SafeAreaProvider>
+      {/* El encabezado es verde oscuro, así que los iconos del sistema deben
+          ser claros. Por defecto son oscuros y quedaban ilegibles encima. */}
+      <StatusBar style="light" />
+      <NavigationContainer>
+        <Stack.Navigator
+          initialRouteName="MedicationList"
+          screenOptions={{ headerShown: false }}
+        >
+          <Stack.Screen name="MedicationList" component={MedicationListScreen} />
+          <Stack.Screen name="AddMedication" component={AddMedicationScreen} />
+          <Stack.Screen name="MedicationDetail" component={MedicationDetailScreen} />
+          <Stack.Screen name="EditMedication" component={AddMedicationScreen} />
+          <Stack.Screen name="CaregiverView" component={CaregiverViewScreen} />
+          <Stack.Screen name="InviteCaregiver" component={InviteCaregiverScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
