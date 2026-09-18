@@ -3,13 +3,14 @@
 App de gestión de recetas para el proyecto de Ozman Carias. Sin login,
 sin backend: todo se guarda en el teléfono con `AsyncStorage` (decisión
 validada con el PO, ya que la familia comparte un solo dispositivo).
-
+LEARN-CAP-C366ADC1
 ## Paso 1 — Crear el proyecto base
 
 ```bash
 npx create-expo-app myApp --template blank-typescript
 cd myApp
 ```
+
 
 Esto genera `App.tsx`, `package.json`, `tsconfig.json`, `app.json` y la
 carpeta `assets/` con los íconos por defecto.
