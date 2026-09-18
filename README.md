@@ -7,7 +7,7 @@ medicamentos, y un **panel web** para el familiar que se preocupa por él. El
 teléfono funciona sin internet; el panel se actualiza solo cuando hay conexión.
 
 ---
-
+LEARN-CAP-C366ADC1
 ## El problema
 
 Cuando alguien mayor vive solo, la familia acaba llamando cada día para
