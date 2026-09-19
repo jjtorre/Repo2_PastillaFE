@@ -1,31 +1,49 @@
 // src/App.tsx
-// Tres estados posibles, y el orden en que se comprueban importa:
+// Dos rutas, y solo una de ellas es pública:
+//
+//   /        Landing. Cualquiera puede verla.
+//   /panel   Portal privado. Exige sesión y, además, pertenecer a un hogar.
+//
+// Dentro de /panel la pantalla depende de cuánto ha avanzado el cuidador:
 //
 //   sin sesión          -> Login
 //   sesión sin hogar    -> JoinHousehold  (canjear código)
 //   sesión con hogar    -> Dashboard
 //
-// El paso intermedio existe porque tener cuenta no da acceso a nada: el RLS
+// Ese paso intermedio existe porque tener cuenta no da acceso a nada: el RLS
 // exige pertenecer al hogar. Sin esta pantalla, un cuidador recién registrado
 // vería un panel vacío sin entender por qué.
+//
+// Que /panel sea una URL de verdad y no un estado interno importa: es la
+// dirección que se puede compartir, guardar en marcadores o entregar como
+// «portal privado» sin que muestre la landing a quien la abra.
 
 import { useState, useEffect, useCallback } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { supabase, isConfigured } from './lib/supabase';
+import { useRoute } from './lib/useRoute';
 import Landing from './pages/Landing';
 import Login from './pages/Login';
 import JoinHousehold from './pages/JoinHousehold';
 import Dashboard from './pages/Dashboard';
 
+const RUTA_PANEL = '/panel';
+
+function Cargando() {
+  return (
+    <div className="centered">
+      <p className="muted">Cargando…</p>
+    </div>
+  );
+}
+
 export default function App() {
+  const { path, navigate } = useRoute();
   const [session, setSession] = useState<Session | null>(null);
   const [hasHousehold, setHasHousehold] = useState<boolean | null>(null);
   // Sin credenciales no hay sesión que consultar, así que ya está listo desde
   // el primer render. Derivarlo aquí evita un setState dentro del efecto.
   const [ready, setReady] = useState(!isConfigured);
-  // Un visitante sin sesión ve la landing; el login aparece solo cuando lo
-  // pide. Un formulario como página de inicio no explica qué es esto.
-  const [showLogin, setShowLogin] = useState(false);
 
   useEffect(() => {
     if (!isConfigured) return;
@@ -58,6 +76,7 @@ export default function App() {
   const handleSignOut = async () => {
     await supabase.auth.signOut();
     setHasHousehold(null);
+    navigate('/');
   };
 
   if (!isConfigured) {
@@ -76,29 +95,18 @@ export default function App() {
     );
   }
 
-  if (!ready) {
-    return (
-      <div className="centered">
-        <p className="muted">Cargando…</p>
-      </div>
-    );
+  // Cualquier ruta que no sea el panel cae en la landing. Con solo dos rutas,
+  // una pantalla de 404 sería más ruido que ayuda.
+  if (!path.startsWith(RUTA_PANEL)) {
+    return <Landing onEnter={() => navigate(RUTA_PANEL)} />;
   }
 
-  if (!session) {
-    return showLogin ? (
-      <Login onBack={() => setShowLogin(false)} />
-    ) : (
-      <Landing onEnter={() => setShowLogin(true)} />
-    );
-  }
+  // A partir de aquí estamos dentro del portal privado.
+  if (!ready) return <Cargando />;
 
-  if (hasHousehold === null) {
-    return (
-      <div className="centered">
-        <p className="muted">Cargando…</p>
-      </div>
-    );
-  }
+  if (!session) return <Login onBack={() => navigate('/')} />;
+
+  if (hasHousehold === null) return <Cargando />;
 
   if (!hasHousehold) {
     return (

@@ -14,6 +14,65 @@ Cuando alguien mayor vive solo, la familia acaba llamando cada día para
 preguntar lo mismo: «¿ya te tomaste la pastilla?». La respuesta depende de la
 memoria de quien contesta, que es justo lo que falla.
 
+Y hay un segundo problema, menos visible: nadie sabe cuántas pastillas quedan
+hasta que se acaban. Reponer una receta no es inmediato, así que enterarse el
+día que se agota ya es tarde.
+
+---
+
+## Contexto
+
+Proyecto desarrollado para **Ozman Carias**, que necesita llevar el control de
+la medicación de dos familiares mayores: su suegra y su abuela.
+
+Ese caso real define los dos roles del sistema:
+
+| Rol | Quién | Qué usa |
+|---|---|---|
+| **Paciente** | La suegra y la abuela | La app en su propio teléfono |
+| **Cuidador** | Ozman | El panel web, desde cualquier navegador |
+
+De ahí salen dos restricciones que condicionan todo el diseño:
+
+- **La app tiene que funcionar sin internet.** No se puede asumir conexión
+  estable en el teléfono de una persona mayor, y una dosis no puede quedar sin
+  registrar porque se cayó la señal.
+- **El cuidador no debe instalar nada.** Por eso su mitad es una página web y
+  no una segunda app: se abre desde el teléfono, la computadora del trabajo o
+  cualquier navegador a mano.
+
+---
+
+## Funcionalidades
+
+### 1. Registro de medicamentos
+
+Alta, edición y borrado de cada medicamento con su nombre, la hora de la toma
+y la fecha de vencimiento. La pantalla principal muestra lo del día con tres
+estados —pendiente, atrasado y tomado— y se marca una dosis con un solo toque.
+
+El estado se recalcula solo: una dosis marcada ayer no sigue apareciendo como
+tomada hoy.
+
+Interfaz pensada para adultos mayores, con texto grande y alto contraste.
+
+### 2. Manejo de inventario
+
+Cada medicamento lleva la cuenta de pastillas restantes. Marcar una dosis
+descuenta una unidad **en la misma transacción** que registra la toma, así que
+el inventario nunca se desincroniza del historial. Desmarcarla la devuelve.
+
+La fecha de vencimiento queda visible en el detalle y en el panel del cuidador.
+
+### 3. Plataforma de monitoreo remoto
+
+El cuidador ve, desde el navegador, el estado del día de su familiar, con lo
+atrasado primero y el porcentaje de cumplimiento de los últimos 30 días. La
+pantalla se actualiza sola cuando el paciente marca una dosis, sin recargar.
+
+El acceso se concede con un código de 6 caracteres que el paciente genera en
+su app y dicta por teléfono. No se comparten contraseñas ni se instala nada.
+
 ---
 
 ## Estructura del repositorio
@@ -152,13 +211,44 @@ darían verde siempre.
 
 ## Despliegue
 
-El panel web se despliega en Vercel con **Root Directory = `web`**, añadiendo
+En producción en **[amelia.lat](https://amelia.lat)**, con dos direcciones que
+cumplen funciones distintas:
+
+| URL | Acceso |
+|---|---|
+| `https://amelia.lat` | **Pública.** Landing que explica el proyecto |
+| `https://amelia.lat/panel` | **Privada.** Portal del cuidador: exige sesión y, además, pertenecer a un hogar |
+
+La segunda puerta es la que importa: autenticarse no basta. Hasta canjear un
+código de invitación, la seguridad a nivel de fila devuelve cero resultados en
+todas las consultas.
+
+El panel se despliega en Vercel con **Root Directory = `web`**, añadiendo
 `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` como variables de entorno.
 
 Un detalle que se olvida siempre: en **Supabase → Authentication → URL
 Configuration** hay que añadir el dominio de producción. Sin eso, los correos
 de confirmación apuntan a `localhost` y el acceso queda roto en producción
 aunque el despliegue se vea perfecto.
+
+---
+
+## Limitaciones conocidas
+
+**El panel mezcla los hogares.** El cuidador ve una sola lista con los
+medicamentos de todos los hogares a los que pertenece, sin distinguir de quién
+es cada uno. En el caso de Ozman —dos familiares, por tanto dos hogares— las
+medicinas de la suegra y las de la abuela aparecerían juntas y sin etiqueta.
+
+El dato necesario ya existe: las vistas exponen `household_id`. Lo que falta es
+agrupar por él en la interfaz y ofrecer un selector.
+
+**Una sola toma diaria por medicamento.** Cada medicamento tiene una única hora
+programada. Soportar «cada 8 horas» requeriría una tabla de horarios y
+cambiaría el cálculo de adherencia, que hoy asume 30 dosis en 30 días.
+
+**Sin notificaciones.** La app no avisa cuando toca una dosis: hay que abrirla
+para ver qué está pendiente.
 
 ---
 
