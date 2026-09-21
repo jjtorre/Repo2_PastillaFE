@@ -35,6 +35,28 @@ Importa el repositorio y configura:
 El [`vercel.json`](vercel.json) ya incluye el `rewrite` a `/`, necesario
 porque es una SPA: sin él, recargar en cualquier ruta daría 404.
 
+Dos detalles de ese archivo, aquí y no ahí porque JSON no admite comentarios y
+**el esquema de Vercel rechaza cualquier propiedad que no reconozca** — una
+clave inventada invalida el archivo completo y el despliegue no sale:
+
+- El patrón es `/((?!api/).*)` y no `/:path*`. La exclusión de `/api` evita
+  que `GET /api/health` devuelva el HTML de la web en lugar del JSON.
+- `outputDirectory` es `dist`, relativo al **Root Directory** (`web`), no a la
+  raíz del repositorio.
+
+## Healthcheck
+
+```
+GET /api/health     →  200 si todo va bien, 503 si no
+```
+
+Función en [`api/health.ts`](api/health.ts). Consulta Supabase de verdad en vez
+de devolver un `"ok"` fijo, y reporta degradado si una petición anónima recibe
+filas: eso significaría que el aislamiento entre hogares falló.
+
+Lee las variables `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` del entorno
+del servidor, las mismas que ya usa el cliente.
+
 ---
 
 ## Cómo entra un cuidador
