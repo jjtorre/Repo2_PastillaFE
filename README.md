@@ -239,6 +239,21 @@ La segunda puerta es la que importa: autenticarse no basta. Hasta canjear un
 código de invitación, la seguridad a nivel de fila devuelve cero resultados en
 todas las consultas.
 
+### Healthcheck
+
+```
+GET https://amelia.lat/api/health     →  200 si todo va bien, 503 si no
+```
+
+Devuelve JSON con el estado, el commit desplegado y la latencia de la base de
+datos. No se limita a responder `{"status":"ok"}`: consulta Supabase de verdad,
+porque lo que puede caerse es la base, no la función que la comprueba.
+
+La consulta pide una fila con la clave anónima y sin sesión. Un `200` con lista
+vacía confirma cuatro cosas de golpe: hay red, la API responde, la base
+contesta y el aislamiento entre hogares está activo. **Si llegaran filas, el
+healthcheck lo reporta como degradado** — devolver datos ahí sería una fuga.
+
 El panel se despliega en Vercel con **Root Directory = `web`**, añadiendo
 `VITE_SUPABASE_URL` y `VITE_SUPABASE_ANON_KEY` como variables de entorno.
 

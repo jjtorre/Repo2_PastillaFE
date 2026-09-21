@@ -3,5 +3,11 @@
   "outputDirectory": "dist",
   "devCommand": "npm run dev",
   "framework": "vite",
-  "rewrites": [{ "source": "/:path*", "destination": "/" }]
+  "rewrites": [
+    {
+      "_comentario": "Todo va al index.html porque es una SPA, MENOS /api: sin la exclusión, GET /api/health devolvería el HTML de la web en vez del JSON de la función.",
+      "source": "/((?!api/).*)",
+      "destination": "/"
+    }
+  ]
 }
