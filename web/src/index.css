@@ -423,3 +423,95 @@ h2 {
 .footer p {
   margin: 0;
 }
+
+/* ---------- Responsive ----------
+
+   El diseño ya se adaptaba con clamp() y con columnas auto-fit, pero eso no
+   resuelve todo: hay cosas que no escalan bien solas y necesitan un corte
+   explícito. Cada bloque de abajo arregla un problema concreto en pantallas
+   estrechas, no es maquillaje. */
+
+/* Tablet y móvil grande. El padding de 24px y el hero de 72px son cómodos en
+   escritorio y desperdician media pantalla en un teléfono. */
+@media (max-width: 768px) {
+  .container {
+    padding: 18px;
+  }
+
+  .hero {
+    padding: 48px 20px 56px;
+  }
+
+  .landing section {
+    margin-bottom: 40px;
+  }
+
+  .header {
+    padding: 16px 18px;
+  }
+
+  /* El botón y el enlace del hero caben peor uno al lado del otro cuanto más
+     largo es el texto; apilarlos evita que se corten. */
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .hero-cta {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* Móvil. Aquí la fila de medicamento deja de caber en una línea: el nombre,
+   el detalle y el porcentaje de adherencia compiten por el mismo ancho. */
+@media (max-width: 560px) {
+  .med-row {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  /* La adherencia pasa debajo, alineada con el texto en vez de al margen
+     derecho, donde quedaría colgando sola. */
+  .med-adherence {
+    text-align: left;
+    width: 100%;
+    padding-left: 22px;
+  }
+
+  .centered {
+    padding: 32px 18px;
+  }
+
+  .step {
+    gap: 14px;
+  }
+
+  .step-num {
+    width: 34px;
+    height: 34px;
+    border-radius: 17px;
+    font-size: 16px;
+  }
+}
+
+/* Móviles estrechos (360px y menos). El campo del código de invitación tiene
+   26px de fuente y 6px de espaciado entre letras: con seis caracteres se sale
+   del contenedor. Lo mismo el código de 40px en la app. */
+@media (max-width: 400px) {
+  .input-code {
+    font-size: 20px;
+    letter-spacing: 3px;
+  }
+
+  .hero-title {
+    letter-spacing: -0.5px;
+  }
+
+  .container,
+  .centered {
+    padding-left: 14px;
+    padding-right: 14px;
+  }
+}
