@@ -11,6 +11,7 @@ import type { MedicationToday, Adherence } from '../lib/types';
 
 interface Props {
   onSignOut: () => void;
+  onAccount: () => void;
 }
 
 const STATUS_ORDER: Record<MedicationToday['status'], number> = {
@@ -26,7 +27,7 @@ function detailText(med: MedicationToday): string {
   return `Pendiente · ${time}`;
 }
 
-export default function Dashboard({ onSignOut }: Props) {
+export default function Dashboard({ onSignOut, onAccount }: Props) {
   const [meds, setMeds] = useState<MedicationToday[]>([]);
   const [adherence, setAdherence] = useState<Adherence[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -83,9 +84,14 @@ export default function Dashboard({ onSignOut }: Props) {
           <p className="eyebrow">Vista de cuidador</p>
           <h1>Estado del día</h1>
         </div>
-        <button type="button" className="plain" onClick={onSignOut}>
-          Cerrar sesión
-        </button>
+        <div style={{ display: 'flex', gap: 10 }}>
+          <button type="button" className="plain" onClick={onAccount}>
+            Mi cuenta
+          </button>
+          <button type="button" className="plain" onClick={onSignOut}>
+            Cerrar sesión
+          </button>
+        </div>
       </header>
 
       <div className="container">

@@ -73,6 +73,21 @@ pantalla se actualiza sola cuando el paciente marca una dosis, sin recargar.
 El acceso se concede con un código de 6 caracteres que el paciente genera en
 su app y dicta por teléfono. No se comparten contraseñas ni se instala nada.
 
+### 4. Portal privado de cuenta
+
+En `/panel/cuenta`, el único lugar de la web donde se puede modificar algo —el
+panel de monitoreo es solo lectura:
+
+- **Datos de la cuenta:** correo y nombre visible para el resto del hogar.
+- **Hogar:** nombre editable y zona horaria. El nombre importa cuando se
+  acompaña a más de un familiar.
+- **Quién tiene acceso:** todos los miembros del hogar con su rol.
+- **Invitaciones:** generar códigos nuevos y revocar los que siguen sin usar.
+
+Una invitación **ya canjeada no se puede borrar**: es el registro de cómo
+entró un miembro al hogar, y permitir borrarla dejaría tapar ese rastro. La
+regla vive en la base de datos, no en la interfaz.
+
 ---
 
 ## Estructura del repositorio
@@ -217,7 +232,8 @@ cumplen funciones distintas:
 | URL | Acceso |
 |---|---|
 | `https://amelia.lat` | **Pública.** Landing que explica el proyecto |
-| `https://amelia.lat/panel` | **Privada.** Portal del cuidador: exige sesión y, además, pertenecer a un hogar |
+| `https://amelia.lat/panel` | **Privada.** Monitoreo del día: exige sesión y pertenecer a un hogar |
+| `https://amelia.lat/panel/cuenta` | **Privada.** Gestión de la cuenta, los miembros y las invitaciones |
 
 La segunda puerta es la que importa: autenticarse no basta. Hasta canjear un
 código de invitación, la seguridad a nivel de fila devuelve cero resultados en

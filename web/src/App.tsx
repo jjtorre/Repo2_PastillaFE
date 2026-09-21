@@ -26,8 +26,10 @@ import Landing from './pages/Landing';
 import Login from './pages/Login';
 import JoinHousehold from './pages/JoinHousehold';
 import Dashboard from './pages/Dashboard';
+import Account from './pages/Account';
 
 const RUTA_PANEL = '/panel';
+const RUTA_CUENTA = '/panel/cuenta';
 
 function Cargando() {
   return (
@@ -114,5 +116,13 @@ export default function App() {
     );
   }
 
-  return <Dashboard onSignOut={handleSignOut} />;
+  // /panel/cuenta entra por el mismo portón: startsWith('/panel') ya exigió
+  // sesión y pertenencia al hogar antes de llegar aquí.
+  if (path.startsWith(RUTA_CUENTA)) {
+    return <Account onBack={() => navigate(RUTA_PANEL)} onSignOut={handleSignOut} />;
+  }
+
+  return (
+    <Dashboard onSignOut={handleSignOut} onAccount={() => navigate(RUTA_CUENTA)} />
+  );
 }

@@ -77,6 +77,16 @@ drop policy if exists invites_insert on public.household_invites;
 create policy invites_insert on public.household_invites for insert
   with check (public.is_household_member(household_id));
 
+-- Revocar un codigo que aun no se ha usado. La condicion "redeemed_at is null"
+-- es deliberada: una invitacion ya canjeada es el registro de COMO entro un
+-- miembro al hogar, asi que no debe poder borrarse para tapar el rastro.
+--
+-- Naturalmente idempotente: revocar dos veces afecta a cero filas la segunda,
+-- sin error.
+drop policy if exists invites_delete on public.household_invites;
+create policy invites_delete on public.household_invites for delete
+  using (public.is_household_member(household_id) and redeemed_at is null);
+
 -- ---------- medications ----------
 -- Tampoco hay policy de DELETE, y es intencional: borrar es un UPDATE de
 -- deleted_at (ver script 004).

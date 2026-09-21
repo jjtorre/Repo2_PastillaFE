@@ -93,4 +93,70 @@ exception when others then
 end
 $do$;
 
+-- =============================================================================
+-- Revocacion desde el portal privado del cuidador
+-- =============================================================================
+
+reset role;
+set app.uid = '22222222-2222-2222-2222-222222222222';
+set role authenticated;
+
+\echo '--- T7: un miembro puede revocar un codigo sin usar'
+do $do$
+declare v_n int;
+begin
+  insert into public.household_invites (code, household_id, role)
+  values ('REV001', 'aaaaaaaa-0000-0000-0000-000000000001', 'caregiver');
+
+  delete from public.household_invites where code = 'REV001';
+
+  select count(*) into v_n from public.household_invites where code = 'REV001';
+  if v_n <> 0 then raise exception 'T7 FALLO: el codigo sigue existiendo'; end if;
+  raise notice 'T7 OK';
+end
+$do$;
+
+\echo '--- T8: revocar dos veces no da error (idempotente)'
+do $do$
+begin
+  delete from public.household_invites where code = 'REV001';
+  delete from public.household_invites where code = 'REV001';
+  raise notice 'T8 OK';
+end
+$do$;
+
+\echo '--- T9: una invitacion YA CANJEADA no se puede borrar'
+do $do$
+declare v_n int;
+begin
+  -- ABC234 lo canjeo este mismo usuario en T1, asi que tiene redeemed_at.
+  delete from public.household_invites where code = 'ABC234';
+
+  select count(*) into v_n from public.household_invites where code = 'ABC234';
+  if v_n <> 1 then
+    raise exception 'T9 FALLO: se borro el rastro de como entro un miembro al hogar';
+  end if;
+  raise notice 'T9 OK -> el registro de entrada se conserva';
+end
+$do$;
+
+\echo '--- T10: un extrano no puede revocar nada'
+reset role;
+set app.uid = '33333333-3333-3333-3333-333333333333';
+set role authenticated;
+
+do $do$
+declare v_n int;
+begin
+  delete from public.household_invites where code = 'OLD999';
+
+  reset role;
+  select count(*) into v_n from public.household_invites where code = 'OLD999';
+  if v_n <> 1 then
+    raise exception 'T10 FALLO - FUGA: un extrano borro una invitacion ajena';
+  end if;
+  raise notice 'T10 OK';
+end
+$do$;
+
 reset role;
