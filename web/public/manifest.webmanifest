@@ -1,0 +1,32 @@
+{
+  "name": "Pastilla — Panel del cuidador",
+  "short_name": "Pastilla",
+  "description": "Consulta si tu familiar ya tomó sus medicamentos hoy, desde cualquier navegador.",
+  "lang": "es",
+  "dir": "ltr",
+  "start_url": "/panel",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#FBF8F3",
+  "theme_color": "#1F3A3D",
+  "icons": [
+    {
+      "src": "/icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon-1024.png",
+      "sizes": "1024x1024",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
