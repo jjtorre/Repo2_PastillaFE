@@ -28,7 +28,7 @@ const STEPS = [
   },
 ];
 
-export default function Landing({ onEnter }: Props) {
+export default function Landing({ onEnter }: Readonly<Props>) {
   return (
     <div className="landing">
       <header className="hero">

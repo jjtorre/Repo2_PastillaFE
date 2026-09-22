@@ -28,7 +28,7 @@ function Row({ label, value, last }: RowProps) {
   );
 }
 
-export default function MedicationDetailScreen({ navigation, route }: Props) {
+export default function MedicationDetailScreen({ navigation, route }: Readonly<Props>) {
   const { id } = route.params;
   const [medication, setMedication] = useState<Medication | null>(null);
 

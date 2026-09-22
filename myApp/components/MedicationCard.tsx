@@ -13,7 +13,7 @@ interface MedicationCardProps {
   onToggleTaken: () => void;
 }
 
-export default function MedicationCard({ medication, onPress, onToggleTaken }: MedicationCardProps) {
+export default function MedicationCard({ medication, onPress, onToggleTaken }: Readonly<MedicationCardProps>) {
   const { name, time, status } = medication;
 
   const barColor = status === 'late' ? colors.warning : colors.primary;

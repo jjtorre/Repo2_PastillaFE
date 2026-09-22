@@ -27,7 +27,7 @@ function detailText(med: MedicationToday): string {
   return `Pendiente · ${time}`;
 }
 
-export default function Dashboard({ onSignOut, onAccount }: Props) {
+export default function Dashboard({ onSignOut, onAccount }: Readonly<Props>) {
   const [meds, setMeds] = useState<MedicationToday[]>([]);
   const [adherence, setAdherence] = useState<Adherence[]>([]);
   const [error, setError] = useState<string | null>(null);

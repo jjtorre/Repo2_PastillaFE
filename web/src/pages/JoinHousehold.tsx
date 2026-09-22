@@ -13,7 +13,7 @@ interface Props {
   onSignOut: () => void;
 }
 
-export default function JoinHousehold({ onJoined, onSignOut }: Props) {
+export default function JoinHousehold({ onJoined, onSignOut }: Readonly<Props>) {
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);

@@ -11,7 +11,7 @@ interface Props {
   onBack: () => void;
 }
 
-export default function Login({ onBack }: Props) {
+export default function Login({ onBack }: Readonly<Props>) {
   const [mode, setMode] = useState<'signin' | 'signup'>('signin');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');

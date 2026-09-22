@@ -70,7 +70,7 @@ function formatearFecha(iso: string): string {
   });
 }
 
-export default function Account({ onBack, onSignOut }: Props) {
+export default function Account({ onBack, onSignOut }: Readonly<Props>) {
   const [perfil, setPerfil] = useState<Perfil | null>(null);
   const [hogar, setHogar] = useState<Hogar | null>(null);
   const [miembros, setMiembros] = useState<Miembro[]>([]);

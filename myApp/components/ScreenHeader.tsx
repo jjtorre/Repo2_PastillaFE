@@ -17,7 +17,7 @@ interface ScreenHeaderProps {
   rightAction?: ReactNode;
 }
 
-export default function ScreenHeader({ title, eyebrow, onBack, rightAction }: ScreenHeaderProps) {
+export default function ScreenHeader({ title, eyebrow, onBack, rightAction }: Readonly<ScreenHeaderProps>) {
   const insets = useSafeAreaInsets();
 
   return (
