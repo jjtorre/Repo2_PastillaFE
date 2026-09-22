@@ -78,6 +78,10 @@ export default function Account({ onBack, onSignOut }: Props) {
 
   const [nombre, setNombre] = useState('');
   const [nombreHogar, setNombreHogar] = useState('');
+  // Rol con el que entrará quien canjee el próximo código. Solo los
+  // administradores pueden repartir 'admin'; la policy lo exige además en la
+  // base de datos, así que esconder la opción no es lo único que lo impide.
+  const [rolInvitado, setRolInvitado] = useState('caregiver');
   const [aviso, setAviso] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [cargando, setCargando] = useState(true);
@@ -188,7 +192,7 @@ export default function Account({ onBack, onSignOut }: Props) {
       const code = generarCodigo();
       const { error: err } = await supabase
         .from('household_invites')
-        .insert({ code, household_id: hogar.id, role: 'caregiver' });
+        .insert({ code, household_id: hogar.id, role: rolInvitado });
 
       if (!err) {
         setAviso(`Código creado: ${code}`);
@@ -364,7 +368,8 @@ export default function Account({ onBack, onSignOut }: Props) {
                         {i.code}
                       </p>
                       <p className="med-detail is-pending">
-                        Caduca el {formatearFecha(i.expires_at)}
+                        Entra como {etiquetaRol(i.role).toLowerCase()} · caduca el{' '}
+                        {formatearFecha(i.expires_at)}
                       </p>
                     </div>
                     <button
@@ -378,7 +383,20 @@ export default function Account({ onBack, onSignOut }: Props) {
                   </div>
                 ))}
 
-                <div style={{ marginTop: 20 }}>
+                <div className="card" style={{ marginTop: 16 }}>
+                  <label htmlFor="rol">Con qué rol entrará</label>
+                  <select
+                    id="rol"
+                    value={rolInvitado}
+                    onChange={(e) => setRolInvitado(e.target.value)}
+                  >
+                    <option value="caregiver">Cuidador — solo consulta el panel</option>
+                    {/* La opción de administrador solo se ofrece a quien ya lo
+                        es. Repartir ese rol permite deshabilitar a los demás. */}
+                    {soyAdmin && (
+                      <option value="admin">Administrador — gestiona el hogar</option>
+                    )}
+                  </select>
                   <button type="button" onClick={crearInvitacion}>
                     Generar código de invitación
                   </button>

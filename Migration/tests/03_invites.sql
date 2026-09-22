@@ -140,6 +140,46 @@ begin
 end
 $do$;
 
+\echo '--- T10b: ESCALADA - un cuidador no puede crear un codigo de administrador'
+do $do$
+begin
+  insert into public.household_invites (code, household_id, role)
+  values ('ESCAL1', 'aaaaaaaa-0000-0000-0000-000000000001', 'admin');
+  raise exception 'T10b FALLO - ESCALADA: un cuidador creo una invitacion de administrador';
+exception when insufficient_privilege or check_violation then
+  raise notice 'T10b OK -> bloqueado por RLS';
+end
+$do$;
+
+\echo '--- T10c: pero SI puede crear una de cuidador'
+do $do$
+begin
+  insert into public.household_invites (code, household_id, role)
+  values ('CUID01', 'aaaaaaaa-0000-0000-0000-000000000001', 'caregiver');
+  delete from public.household_invites where code = 'CUID01';
+  raise notice 'T10c OK';
+end
+$do$;
+
+\echo '--- T10d: un administrador SI puede crear una de administrador'
+reset role;
+set app.uid = '11111111-1111-1111-1111-111111111111';
+set role authenticated;
+
+do $do$
+declare v_rol text;
+begin
+  insert into public.household_invites (code, household_id, role)
+  values ('ADMIN1', 'aaaaaaaa-0000-0000-0000-000000000001', 'admin');
+
+  select role into v_rol from public.household_invites where code = 'ADMIN1';
+  if v_rol <> 'admin' then raise exception 'T10d FALLO: rol guardado = %', v_rol; end if;
+
+  delete from public.household_invites where code = 'ADMIN1';
+  raise notice 'T10d OK';
+end
+$do$;
+
 \echo '--- T10: un extrano no puede revocar nada'
 reset role;
 set app.uid = '33333333-3333-3333-3333-333333333333';

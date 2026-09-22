@@ -191,7 +191,8 @@ label {
   margin-bottom: 6px;
 }
 
-input {
+input,
+select {
   width: 100%;
   padding: 12px 14px;
   font-size: 16px;
@@ -203,7 +204,8 @@ input {
   margin-bottom: 16px;
 }
 
-input:focus {
+input:focus,
+select:focus {
   outline: 2px solid var(--primary);
   outline-offset: 1px;
 }

@@ -97,9 +97,18 @@ drop policy if exists invites_select on public.household_invites;
 create policy invites_select on public.household_invites for select
   using (public.is_household_member(household_id));
 
+-- Cualquier miembro puede invitar a un cuidador, pero SOLO un administrador
+-- puede repartir el rol de administrador o de paciente.
+--
+-- Sin la segunda condicion habria escalada de privilegios: un cuidador podria
+-- crear un codigo de administrador, dárselo a un conocido y pasar a controlar
+-- el hogar, incluido deshabilitar al administrador que lo invito.
 drop policy if exists invites_insert on public.household_invites;
 create policy invites_insert on public.household_invites for insert
-  with check (public.is_household_member(household_id));
+  with check (
+    public.is_household_member(household_id)
+    and (role = 'caregiver' or public.is_household_admin(household_id))
+  );
 
 -- Revocar un codigo que aun no se ha usado. La condicion "redeemed_at is null"
 -- es deliberada: una invitacion ya canjeada es el registro de COMO entro un
