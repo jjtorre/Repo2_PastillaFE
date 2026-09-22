@@ -200,6 +200,17 @@ todas las consultas devuelven cero filas.
 
 ---
 
+## Arquitectura
+
+El documento completo, con los diagramas C4, está en
+[docs/arquitectura.md](docs/arquitectura.md). Las dos decisiones estructurales
+tienen su propio registro:
+
+| ADR | Decisión |
+|---|---|
+| [ADR-001](docs/adr/ADR-001-offline-first-con-cola-de-salida.md) | Arquitectura offline-first con cola de salida en el dispositivo |
+| [ADR-002](docs/adr/ADR-002-seguridad-en-la-base-de-datos.md) | Seguridad a nivel de fila en la base de datos como único control de acceso |
+
 ## Decisiones de diseño
 
 Cuatro elecciones explican casi todo el código.
