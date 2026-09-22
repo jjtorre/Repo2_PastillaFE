@@ -1,0 +1,21 @@
+{
+  "name": "pastilla",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Pruebas y cobertura del codigo compartido entre la app movil y la web",
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.3",
+    "@vitest/coverage-istanbul": "^3.2.4",
+    "jsdom": "^26.1.0",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "typescript": "~5.9.2",
+    "vitest": "^3.2.4"
+  }
+}

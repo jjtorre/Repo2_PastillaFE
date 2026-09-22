@@ -1,0 +1,70 @@
+name: SonarCloud
+
+# Analisis de calidad de codigo.
+#
+# DORMIDO hasta que exista el secreto SONAR_TOKEN, igual que el despliegue
+# opcional de la web: sin el se salta limpiamente en vez de dejar el
+# repositorio en rojo permanente.
+#
+# Para activarlo:
+#   1. Crea el proyecto PUBLICO en sonarcloud.io conectado a este repositorio.
+#   2. Copia el token que genera en Settings > Secrets and variables > Actions
+#      con el nombre SONAR_TOKEN.
+#   3. Ajusta projectKey y organization en sonar-project.properties con los
+#      valores que SonarCloud asigne.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  analisis:
+    name: Analisis de calidad
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Hay token configurado?
+        id: token
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          if [ -n "$SONAR_TOKEN" ]; then
+            echo "activo=si" >> "$GITHUB_OUTPUT"
+          else
+            echo "activo=no" >> "$GITHUB_OUTPUT"
+            echo "Sin SONAR_TOKEN: se omite el analisis." >> "$GITHUB_STEP_SUMMARY"
+            echo "Crea el proyecto en sonarcloud.io y anade el secreto para activarlo." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      # fetch-depth: 0 es necesario para que Sonar pueda atribuir cada linea a
+      # su autor y calcular el "codigo nuevo" contra el historial. Con el clon
+      # superficial por defecto, el analisis pierde esa informacion.
+      - uses: actions/checkout@v4
+        if: steps.token.outputs.activo == 'si'
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        if: steps.token.outputs.activo == 'si'
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Instalar dependencias
+        if: steps.token.outputs.activo == 'si'
+        run: npm ci
+
+      # El analisis lee coverage/lcov.info, asi que hay que generarlo antes:
+      # de lo contrario Sonar reportaria 0% de cobertura.
+      - name: Generar cobertura
+        if: steps.token.outputs.activo == 'si'
+        run: npm run coverage
+
+      - name: Analizar
+        if: steps.token.outputs.activo == 'si'
+        uses: SonarSource/sonarqube-scan-action@v5
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

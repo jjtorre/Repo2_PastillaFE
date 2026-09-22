@@ -1,0 +1,21 @@
+# Dependencias del paquete de pruebas de la raiz
+node_modules/
+
+# Cobertura
+#
+# Los dos artefactos de DATOS si se versionan a proposito: son los que se leen
+# para comprobar el porcentaje, y tenerlos en el repositorio permite revisarlo
+# sin reejecutar nada.
+#
+# El informe HTML no: son cientos de archivos generados que cambian enteros en
+# cada ejecucion y ensucian cualquier diff.
+coverage/lcov-report/
+coverage/tmp/
+.nyc_output/
+
+# Analisis de SonarCloud
+.scannerwork/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db

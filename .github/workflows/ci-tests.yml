@@ -1,0 +1,54 @@
+name: Pruebas y cobertura
+
+# Corre en cualquier cambio de codigo, no solo de una carpeta: las pruebas
+# cubren modulos de myApp y de web a la vez, asi que un cambio en cualquiera
+# de los dos puede romperlas.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  pruebas:
+    name: Vitest y cobertura
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+          cache-dependency-path: package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Pruebas con cobertura
+        run: npm run coverage
+
+      # El informe se versiona, asi que puede quedarse obsoleto si alguien
+      # cambia el codigo y no lo regenera. Esto lo detecta: si el porcentaje
+      # baja del minimo, falla aqui y no en la revision del profesor.
+      - name: Comprobar el minimo de cobertura
+        run: |
+          node -e "
+            const s = require('./coverage/coverage-summary.json');
+            const pct = s.total.lines.pct;
+            console.log('Cobertura de lineas: ' + pct + '%');
+            if (pct < 60) {
+              console.error('Por debajo del minimo exigido del 60%.');
+              process.exit(1);
+            }
+          "
+
+      - name: Publicar el informe como artefacto
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: cobertura
+          path: coverage/
+          retention-days: 14
