@@ -7,7 +7,7 @@
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage && node scripts/normalizar-cobertura.mjs"
   },
   "devDependencies": {
     "@testing-library/react": "^16.3.3",

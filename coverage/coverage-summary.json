@@ -1,11 +1,268 @@
-{"total": {"lines":{"total":240,"covered":184,"skipped":0,"pct":76.66},"statements":{"total":279,"covered":205,"skipped":0,"pct":73.47},"functions":{"total":54,"covered":44,"skipped":0,"pct":81.48},"branches":{"total":169,"covered":118,"skipped":0,"pct":69.82},"branchesTrue":{"total":0,"covered":0,"skipped":0,"pct":100}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/myApp/storage.ts": {"lines":{"total":29,"covered":29,"skipped":0,"pct":100},"functions":{"total":12,"covered":12,"skipped":0,"pct":100},"statements":{"total":36,"covered":36,"skipped":0,"pct":100},"branches":{"total":14,"covered":13,"skipped":0,"pct":92.85}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/myApp/lib/local.ts": {"lines":{"total":14,"covered":14,"skipped":0,"pct":100},"functions":{"total":4,"covered":4,"skipped":0,"pct":100},"statements":{"total":14,"covered":14,"skipped":0,"pct":100},"branches":{"total":2,"covered":2,"skipped":0,"pct":100}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/myApp/lib/migrate.ts": {"lines":{"total":21,"covered":21,"skipped":0,"pct":100},"functions":{"total":3,"covered":3,"skipped":0,"pct":100},"statements":{"total":23,"covered":23,"skipped":0,"pct":100},"branches":{"total":12,"covered":11,"skipped":0,"pct":91.66}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/myApp/lib/outbox.ts": {"lines":{"total":15,"covered":14,"skipped":0,"pct":93.33},"functions":{"total":5,"covered":5,"skipped":0,"pct":100},"statements":{"total":15,"covered":14,"skipped":0,"pct":93.33},"branches":{"total":12,"covered":12,"skipped":0,"pct":100}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/myApp/lib/session.ts": {"lines":{"total":41,"covered":0,"skipped":0,"pct":0},"functions":{"total":5,"covered":0,"skipped":0,"pct":0},"statements":{"total":50,"covered":0,"skipped":0,"pct":0},"branches":{"total":34,"covered":0,"skipped":0,"pct":0}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/myApp/lib/status.ts": {"lines":{"total":14,"covered":14,"skipped":0,"pct":100},"functions":{"total":4,"covered":4,"skipped":0,"pct":100},"statements":{"total":15,"covered":15,"skipped":0,"pct":100},"branches":{"total":11,"covered":11,"skipped":0,"pct":100}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/myApp/lib/sync.ts": {"lines":{"total":70,"covered":56,"skipped":0,"pct":80},"functions":{"total":13,"covered":8,"skipped":0,"pct":61.53},"statements":{"total":86,"covered":63,"skipped":0,"pct":73.25},"branches":{"total":50,"covered":35,"skipped":0,"pct":70}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/web/api/health.ts": {"lines":{"total":26,"covered":26,"skipped":0,"pct":100},"functions":{"total":2,"covered":2,"skipped":0,"pct":100},"statements":{"total":26,"covered":26,"skipped":0,"pct":100},"branches":{"total":32,"covered":32,"skipped":0,"pct":100}}
-,"C:/Users/javi2/Documents/ProyectoPastilla/Repo2_PastillaFE/web/src/lib/useRoute.ts": {"lines":{"total":10,"covered":10,"skipped":0,"pct":100},"functions":{"total":6,"covered":6,"skipped":0,"pct":100},"statements":{"total":14,"covered":14,"skipped":0,"pct":100},"branches":{"total":2,"covered":2,"skipped":0,"pct":100}}
+{
+  "total": {
+    "lines": {
+      "total": 240,
+      "covered": 184,
+      "skipped": 0,
+      "pct": 76.66
+    },
+    "statements": {
+      "total": 279,
+      "covered": 205,
+      "skipped": 0,
+      "pct": 73.47
+    },
+    "functions": {
+      "total": 54,
+      "covered": 44,
+      "skipped": 0,
+      "pct": 81.48
+    },
+    "branches": {
+      "total": 169,
+      "covered": 118,
+      "skipped": 0,
+      "pct": 69.82
+    },
+    "branchesTrue": {
+      "total": 0,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "myApp/storage.ts": {
+    "lines": {
+      "total": 29,
+      "covered": 29,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 12,
+      "covered": 12,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 36,
+      "covered": 36,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 14,
+      "covered": 13,
+      "skipped": 0,
+      "pct": 92.85
+    }
+  },
+  "myApp/lib/local.ts": {
+    "lines": {
+      "total": 14,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 14,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "myApp/lib/migrate.ts": {
+    "lines": {
+      "total": 21,
+      "covered": 21,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 3,
+      "covered": 3,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 23,
+      "covered": 23,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 12,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 91.66
+    }
+  },
+  "myApp/lib/outbox.ts": {
+    "lines": {
+      "total": 15,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 93.33
+    },
+    "functions": {
+      "total": 5,
+      "covered": 5,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 15,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 93.33
+    },
+    "branches": {
+      "total": 12,
+      "covered": 12,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "myApp/lib/session.ts": {
+    "lines": {
+      "total": 41,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 0
+    },
+    "functions": {
+      "total": 5,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 0
+    },
+    "statements": {
+      "total": 50,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 0
+    },
+    "branches": {
+      "total": 34,
+      "covered": 0,
+      "skipped": 0,
+      "pct": 0
+    }
+  },
+  "myApp/lib/status.ts": {
+    "lines": {
+      "total": 14,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 4,
+      "covered": 4,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 15,
+      "covered": 15,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 11,
+      "covered": 11,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "myApp/lib/sync.ts": {
+    "lines": {
+      "total": 70,
+      "covered": 56,
+      "skipped": 0,
+      "pct": 80
+    },
+    "functions": {
+      "total": 13,
+      "covered": 8,
+      "skipped": 0,
+      "pct": 61.53
+    },
+    "statements": {
+      "total": 86,
+      "covered": 63,
+      "skipped": 0,
+      "pct": 73.25
+    },
+    "branches": {
+      "total": 50,
+      "covered": 35,
+      "skipped": 0,
+      "pct": 70
+    }
+  },
+  "web/api/health.ts": {
+    "lines": {
+      "total": 26,
+      "covered": 26,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 26,
+      "covered": 26,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 32,
+      "covered": 32,
+      "skipped": 0,
+      "pct": 100
+    }
+  },
+  "web/src/lib/useRoute.ts": {
+    "lines": {
+      "total": 10,
+      "covered": 10,
+      "skipped": 0,
+      "pct": 100
+    },
+    "functions": {
+      "total": 6,
+      "covered": 6,
+      "skipped": 0,
+      "pct": 100
+    },
+    "statements": {
+      "total": 14,
+      "covered": 14,
+      "skipped": 0,
+      "pct": 100
+    },
+    "branches": {
+      "total": 2,
+      "covered": 2,
+      "skipped": 0,
+      "pct": 100
+    }
+  }
 }

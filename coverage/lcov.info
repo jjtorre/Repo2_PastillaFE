@@ -1,5 +1,5 @@
 TN:
-SF:myApp\storage.ts
+SF:myApp/storage.ts
 FN:32,getMedications
 FN:36,saveMedications
 FN:40,addMedication
@@ -75,7 +75,7 @@ BRF:14
 BRH:13
 end_of_record
 TN:
-SF:myApp\lib\local.ts
+SF:myApp/lib/local.ts
 FN:17,readLocal
 FN:27,writeLocal
 FN:37,getHouseholdId
@@ -108,7 +108,7 @@ BRF:2
 BRH:2
 end_of_record
 TN:
-SF:myApp\lib\migrate.ts
+SF:myApp/lib/migrate.ts
 FN:19,bootstrapLocalData
 FN:25,(anonymous_1)
 FN:42,(anonymous_2)
@@ -156,7 +156,7 @@ BRF:12
 BRH:11
 end_of_record
 TN:
-SF:myApp\lib\outbox.ts
+SF:myApp/lib/outbox.ts
 FN:24,readOutbox
 FN:33,writeOutbox
 FN:41,enqueue
@@ -202,7 +202,7 @@ BRF:12
 BRH:12
 end_of_record
 TN:
-SF:myApp\lib\session.ts
+SF:myApp/lib/session.ts
 FN:21,ensureSession
 FN:37,ensureHousehold
 FN:80,generateCode
@@ -296,7 +296,7 @@ BRF:34
 BRH:0
 end_of_record
 TN:
-SF:myApp\lib\status.ts
+SF:myApp/lib/status.ts
 FN:8,isSameDay
 FN:20,computeStatus
 FN:41,toLocalDateString
@@ -338,7 +338,7 @@ BRF:11
 BRH:11
 end_of_record
 TN:
-SF:myApp\lib\sync.ts
+SF:myApp/lib/sync.ts
 FN:35,toRemoteRow
 FN:49,toLocalMedication
 FN:64,applyOp
@@ -493,7 +493,7 @@ BRF:50
 BRH:35
 end_of_record
 TN:
-SF:web\api\health.ts
+SF:web/api/health.ts
 FN:33,comprobarBaseDeDatos
 FN:84,handler
 FNF:2
@@ -564,7 +564,7 @@ BRF:32
 BRH:32
 end_of_record
 TN:
-SF:web\src\lib\useRoute.ts
+SF:web/src/lib/useRoute.ts
 FN:13,useRoute
 FN:14,(anonymous_1)
 FN:16,(anonymous_2)
