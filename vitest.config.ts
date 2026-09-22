@@ -24,6 +24,19 @@ export default defineConfig({
       '@react-native-community/netinfo': resolve(__dirname, 'tests/stubs/netinfo.ts'),
     },
   },
+  // Sin esto, al transformar un archivo de myApp/ Vite busca el tsconfig mas
+  // cercano y encuentra myApp/tsconfig.json, que hace extends de
+  // "expo/tsconfig.base". En CI solo se instalan las dependencias de la raiz,
+  // asi que Expo no esta y la resolucion falla tumbando la suite entera.
+  //
+  // Las pruebas solo necesitan transpilar TypeScript, no la configuracion de
+  // Expo. Al dar un tsconfigRaw explicito, esbuild deja de buscarlo en disco.
+  // Se pasa como CADENA, no como objeto: con un objeto Vite sigue leyendo el
+  // tsconfig del disco para fusionar opciones, y vuelve a fallar. Solo la
+  // forma de cadena le hace saltarse la busqueda por completo.
+  esbuild: {
+    tsconfigRaw: '{"compilerOptions":{"target":"es2022","useDefineForClassFields":true}}',
+  },
   test: {
     environment: 'node',
     include: ['tests/**/*.test.ts'],
