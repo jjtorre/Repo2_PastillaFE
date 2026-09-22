@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pastilla — Presentación del producto</title>
+<meta name="description" content="Pastilla: seguimiento de medicación para personas mayores que viven solas. App móvil offline-first y panel web para el cuidador.">
+<meta name="verification" content="LEARN-CAP-C366ADC1">
+<style>
+:root{
+  --fondo:#FBF8F3; --papel:#fff; --borde:#E5DFD3;
+  --tinta:#1F3A3D; --suave:#8B7355;
+  --verde:#2D6E5E; --naranja:#D4683A; --naranjaBg:#FBEAE3; --verdeBg:#E8EFE9;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fondo);color:var(--tinta);line-height:1.65;
+  font-family:system-ui,-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif}
+.contenedor{max-width:860px;margin:0 auto;padding:0 24px}
+
+header.hero{background:var(--tinta);color:var(--fondo);padding:72px 0 64px}
+.eyebrow{letter-spacing:3px;text-transform:uppercase;font-size:13px;opacity:.7;margin:0 0 14px}
+h1{font-size:clamp(32px,6vw,52px);line-height:1.1;margin:0 0 18px;font-weight:700}
+.sub{font-size:clamp(17px,2.2vw,20px);opacity:.88;margin:0 0 32px;max-width:36em}
+.botones{display:flex;gap:14px;flex-wrap:wrap}
+.btn{display:inline-block;text-decoration:none;font-weight:600;padding:14px 26px;border-radius:28px;
+  background:var(--fondo);color:var(--tinta)}
+.btn.sec{background:transparent;color:var(--fondo);border:1px solid rgba(251,248,243,.45)}
+
+section{padding:52px 0;border-bottom:1px solid var(--borde)}
+section:last-of-type{border-bottom:none}
+h2{font-size:clamp(23px,3.2vw,30px);margin:0 0 6px}
+.num{color:var(--verde);font-weight:700;font-size:14px;letter-spacing:2px;
+  text-transform:uppercase;margin:0 0 4px}
+p{margin:0 0 18px;max-width:44em}
+.suave{color:var(--suave)}
+ul{padding-left:20px;max-width:44em} li{margin-bottom:10px}
+
+.tarjetas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:22px}
+.tarjeta{background:var(--papel);border:1px solid var(--borde);border-radius:16px;padding:22px}
+.tarjeta h3{margin:0 0 8px;font-size:18px;color:var(--verde)}
+.tarjeta p{font-size:15px;color:var(--suave);margin:0}
+
+figure{margin:28px 0;text-align:center}
+figure svg{max-width:100%;height:auto;border:1px solid var(--borde);border-radius:16px;background:var(--papel)}
+figcaption{font-size:14px;color:var(--suave);margin-top:10px}
+
+table{width:100%;border-collapse:collapse;margin:22px 0;font-size:15px}
+th,td{text-align:left;padding:11px 12px;border-bottom:1px solid var(--borde)}
+th{color:var(--suave);font-size:13px;text-transform:uppercase;letter-spacing:1px}
+code{background:var(--verdeBg);padding:2px 7px;border-radius:6px;font-size:14px}
+
+ol.pasos{list-style:none;padding:0;counter-reset:p}
+ol.pasos li{counter-increment:p;display:flex;gap:18px;margin-bottom:26px;align-items:flex-start}
+ol.pasos li::before{content:counter(p);flex:0 0 38px;height:38px;border-radius:19px;
+  background:var(--verde);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700}
+ol.pasos h3{margin:6px 0 6px;font-size:17px}
+ol.pasos p{margin:0;color:var(--suave);font-size:15px}
+
+.destacado{background:var(--verdeBg);border-radius:16px;padding:26px}
+.aviso{background:var(--naranjaBg);border-radius:16px;padding:20px;color:var(--naranja);font-weight:600}
+footer{background:var(--tinta);color:var(--fondo);padding:40px 0;font-size:14px}
+footer a{color:var(--fondo)}
+.codigo{font-family:ui-monospace,Menlo,Consolas,monospace;letter-spacing:1px;
+  background:rgba(251,248,243,.14);padding:5px 10px;border-radius:8px;display:inline-block}
+@media(max-width:640px){
+  header.hero{padding:52px 0 46px}
+  section{padding:38px 0}
+  .contenedor{padding:0 18px}
+  ol.pasos li{gap:12px}
+}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="contenedor">
+    <p class="eyebrow">Pastilla</p>
+    <h1>Que nadie olvide su medicina</h1>
+    <p class="sub">Una app para quien toma los medicamentos y un panel web para el familiar
+      que se preocupa por él. El teléfono funciona sin internet; el panel se actualiza solo.</p>
+    <div class="botones">
+      <a class="btn" href="https://amelia.lat">Ver el producto en vivo</a>
+      <a class="btn sec" href="https://github.com/jjtorre/Repo2_PastillaFE">Código fuente</a>
+    </div>
+  </div>
+</header>
+
+<main class="contenedor">
+
+<section>
+  <p class="num">01 — El problema</p>
+  <h2>Llamar cada día para preguntar lo mismo</h2>
+  <p>Cuando una persona mayor vive sola, la familia acaba llamando a diario para preguntar
+    «¿ya te tomaste la pastilla?». La respuesta depende de la memoria de quien contesta, que
+    es exactamente la facultad que empieza a fallar. Nadie miente: simplemente no se acuerda.</p>
+  <p>El resultado son dos errores opuestos y ambos peligrosos. Una dosis que se salta sin que
+    nadie lo note, o una dosis que se repite porque la persona no recuerda haberla tomado.
+    En tratamientos para la presión o la diabetes, ninguno de los dos es inocuo.</p>
+  <p>Hay un segundo problema, menos visible pero igual de real: nadie sabe cuántas pastillas
+    quedan hasta que se acaban. Reponer una receta lleva días, así que enterarse el día que se
+    agota la caja ya es tarde.</p>
+  <div class="aviso">La información existe. El problema es que vive en la cabeza de alguien
+    que no puede recordarla con fiabilidad, y no llega a quien podría actuar.</div>
+</section>
+
+<section>
+  <p class="num">02 — La solución</p>
+  <h2>Dos mitades con necesidades opuestas</h2>
+  <p>Pastilla separa el sistema en dos aplicaciones que se comportan de forma distinta porque
+    sus usuarios lo son. El paciente registra sus medicinas y marca cada toma con un solo
+    toque, en una interfaz de texto grande y alto contraste. El cuidador consulta desde
+    cualquier navegador, sin instalar absolutamente nada.</p>
+  <p>Esa asimetría define todo el diseño. El teléfono del paciente tiene que funcionar sin
+    conexión, porque no se puede asumir buena señal y una dosis no puede quedar sin registrar
+    por un fallo de red. El cuidador, en cambio, necesita datos frescos: mostrarle información
+    caducada sería peor que no mostrarle nada.</p>
+  <figure>
+    <svg viewBox="0 0 800 230" role="img" aria-label="Diagrama: el teléfono del paciente sincroniza con la base de datos y el cuidador consulta desde el navegador">
+      <rect x="24" y="46" width="200" height="138" rx="16" fill="#E8EFE9" stroke="#2D6E5E" stroke-width="2"/>
+      <text x="124" y="84" text-anchor="middle" font-size="15" font-weight="700" fill="#1F3A3D" font-family="sans-serif">Teléfono</text>
+      <text x="124" y="108" text-anchor="middle" font-size="13" fill="#2D6E5E" font-family="sans-serif">del paciente</text>
+      <text x="124" y="136" text-anchor="middle" font-size="12" fill="#8B7355" font-family="sans-serif">Guarda en local</text>
+      <text x="124" y="154" text-anchor="middle" font-size="12" fill="#8B7355" font-family="sans-serif">Funciona sin red</text>
+
+      <rect x="300" y="46" width="200" height="138" rx="16" fill="#fff" stroke="#1F3A3D" stroke-width="2"/>
+      <text x="400" y="84" text-anchor="middle" font-size="15" font-weight="700" fill="#1F3A3D" font-family="sans-serif">Base de datos</text>
+      <text x="400" y="108" text-anchor="middle" font-size="13" fill="#2D6E5E" font-family="sans-serif">PostgreSQL</text>
+      <text x="400" y="136" text-anchor="middle" font-size="12" fill="#8B7355" font-family="sans-serif">Aísla cada familia</text>
+      <text x="400" y="154" text-anchor="middle" font-size="12" fill="#8B7355" font-family="sans-serif">por fila</text>
+
+      <rect x="576" y="46" width="200" height="138" rx="16" fill="#E8EFE9" stroke="#2D6E5E" stroke-width="2"/>
+      <text x="676" y="84" text-anchor="middle" font-size="15" font-weight="700" fill="#1F3A3D" font-family="sans-serif">Navegador</text>
+      <text x="676" y="108" text-anchor="middle" font-size="13" fill="#2D6E5E" font-family="sans-serif">del cuidador</text>
+      <text x="676" y="136" text-anchor="middle" font-size="12" fill="#8B7355" font-family="sans-serif">Solo lectura</text>
+      <text x="676" y="154" text-anchor="middle" font-size="12" fill="#8B7355" font-family="sans-serif">Tiempo real</text>
+
+      <path d="M232 100 L292 100" stroke="#2D6E5E" stroke-width="2.5" marker-end="url(#f)"/>
+      <path d="M292 130 L232 130" stroke="#8B7355" stroke-width="2.5" marker-end="url(#g)"/>
+      <path d="M508 115 L568 115" stroke="#2D6E5E" stroke-width="2.5" marker-end="url(#f)"/>
+      <text x="262" y="92" text-anchor="middle" font-size="11" fill="#2D6E5E" font-family="sans-serif">sube</text>
+      <text x="262" y="150" text-anchor="middle" font-size="11" fill="#8B7355" font-family="sans-serif">baja</text>
+      <text x="538" y="107" text-anchor="middle" font-size="11" fill="#2D6E5E" font-family="sans-serif">lee</text>
+      <defs>
+        <marker id="f" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#2D6E5E"/></marker>
+        <marker id="g" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8B7355"/></marker>
+      </defs>
+    </svg>
+    <figcaption>El teléfono es la fuente de verdad inmediata; sincronizar ocurre en segundo plano.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <p class="num">03 — Funcionalidades</p>
+  <h2>Qué hace exactamente</h2>
+  <div class="tarjetas">
+    <div class="tarjeta"><h3>Registro de medicamentos</h3>
+      <p>Nombre, hora de la toma y fecha de vencimiento. La pantalla del día muestra tres
+        estados: pendiente, atrasado y tomado.</p></div>
+    <div class="tarjeta"><h3>Marcado en un toque</h3>
+      <p>Un círculo grande por medicamento. El estado se recalcula solo, así que la dosis de
+        ayer no sigue apareciendo como tomada hoy.</p></div>
+    <div class="tarjeta"><h3>Control de inventario</h3>
+      <p>Cada toma descuenta una pastilla en la misma operación que la registra, de modo que
+        el inventario nunca se desincroniza del historial.</p></div>
+    <div class="tarjeta"><h3>Monitoreo remoto</h3>
+      <p>El cuidador ve el estado del día con lo atrasado primero y el porcentaje de
+        cumplimiento de los últimos treinta días.</p></div>
+    <div class="tarjeta"><h3>Acceso por invitación</h3>
+      <p>El paciente genera un código de seis caracteres y lo dicta por teléfono. No se
+        comparten contraseñas.</p></div>
+    <div class="tarjeta"><h3>Gestión de accesos</h3>
+      <p>Un administrador puede retirar el acceso a un cuidador, y esa retirada es efectiva en
+        toda la base de datos, no solo en la pantalla.</p></div>
+  </div>
+  <figure>
+    <svg viewBox="0 0 760 300" role="img" aria-label="Maqueta de la app móvil mostrando dos medicamentos, uno atrasado y otro tomado">
+      <rect x="30" y="16" width="300" height="268" rx="22" fill="#FBF8F3" stroke="#E5DFD3" stroke-width="2"/>
+      <rect x="30" y="16" width="300" height="60" rx="22" fill="#1F3A3D"/><rect x="30" y="56" width="300" height="20" fill="#1F3A3D"/>
+      <text x="52" y="42" font-size="11" fill="#FBF8F3" opacity=".75" font-family="sans-serif">Hola</text>
+      <text x="52" y="64" font-size="16" font-weight="700" fill="#FBF8F3" font-family="sans-serif">Mis medicamentos</text>
+      <rect x="48" y="96" width="264" height="62" rx="12" fill="#fff" stroke="#E5DFD3"/>
+      <rect x="62" y="112" width="6" height="30" rx="3" fill="#D4683A"/>
+      <text x="82" y="124" font-size="14" font-weight="600" fill="#1F3A3D" font-family="sans-serif">Losartán 50mg</text>
+      <text x="82" y="143" font-size="12" fill="#D4683A" font-family="sans-serif">06:00 · atrasado</text>
+      <circle cx="288" cy="127" r="14" fill="none" stroke="#D4683A" stroke-width="2.5"/>
+      <rect x="48" y="172" width="264" height="62" rx="12" fill="#fff" stroke="#E5DFD3"/>
+      <rect x="62" y="188" width="6" height="30" rx="3" fill="#2D6E5E"/>
+      <text x="82" y="200" font-size="14" font-weight="600" fill="#1F3A3D" font-family="sans-serif">Metformina 850mg</text>
+      <text x="82" y="219" font-size="12" fill="#8B7355" font-family="sans-serif">08:00 · tomado</text>
+      <circle cx="288" cy="203" r="14" fill="#2D6E5E"/>
+      <path d="M281 203 l5 5 l9 -10" stroke="#fff" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <rect x="48" y="248" width="264" height="24" rx="12" fill="#2D6E5E"/>
+      <text x="180" y="264" text-anchor="middle" font-size="12" font-weight="600" fill="#fff" font-family="sans-serif">+ Agregar medicamento</text>
+
+      <rect x="400" y="16" width="330" height="268" rx="14" fill="#FBF8F3" stroke="#E5DFD3" stroke-width="2"/>
+      <rect x="400" y="16" width="330" height="52" rx="14" fill="#1F3A3D"/><rect x="400" y="54" width="330" height="14" fill="#1F3A3D"/>
+      <text x="420" y="40" font-size="10" fill="#FBF8F3" opacity=".75" font-family="sans-serif">Vista de cuidador</text>
+      <text x="420" y="58" font-size="15" font-weight="700" fill="#FBF8F3" font-family="sans-serif">Estado del día</text>
+      <rect x="416" y="82" width="298" height="26" rx="8" fill="#FBEAE3"/>
+      <text x="430" y="99" font-size="12" font-weight="600" fill="#D4683A" font-family="sans-serif">⚠ 1 medicamento sin marcar</text>
+      <rect x="416" y="120" width="298" height="48" rx="10" fill="#fff" stroke="#E5DFD3"/>
+      <circle cx="440" cy="144" r="13" fill="#FBEAE3"/><text x="440" y="149" text-anchor="middle" font-size="13" fill="#D4683A" font-family="sans-serif">!</text>
+      <text x="464" y="140" font-size="13" font-weight="600" fill="#1F3A3D" font-family="sans-serif">Losartán 50mg</text>
+      <text x="464" y="157" font-size="11" fill="#D4683A" font-family="sans-serif">No tomado · 06:00</text>
+      <text x="700" y="140" text-anchor="end" font-size="12" font-weight="700" fill="#2D6E5E" font-family="sans-serif">93%</text>
+      <text x="700" y="155" text-anchor="end" font-size="9" fill="#8B7355" font-family="sans-serif">30 días</text>
+      <rect x="416" y="180" width="298" height="48" rx="10" fill="#fff" stroke="#E5DFD3"/>
+      <circle cx="440" cy="204" r="13" fill="#E8EFE9"/><text x="440" y="209" text-anchor="middle" font-size="12" fill="#2D6E5E" font-family="sans-serif">✓</text>
+      <text x="464" y="200" font-size="13" font-weight="600" fill="#1F3A3D" font-family="sans-serif">Metformina 850mg</text>
+      <text x="464" y="217" font-size="11" fill="#2D6E5E" font-family="sans-serif">Tomado · 08:00</text>
+      <text x="700" y="200" text-anchor="end" font-size="12" font-weight="700" fill="#2D6E5E" font-family="sans-serif">71%</text>
+      <text x="700" y="215" text-anchor="end" font-size="9" fill="#8B7355" font-family="sans-serif">30 días</text>
+    </svg>
+    <figcaption>Izquierda: la app del paciente. Derecha: el panel del cuidador, con lo atrasado primero.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <p class="num">04 — Arquitectura</p>
+  <h2>Offline-first, con la seguridad en la base de datos</h2>
+  <p>Toda escritura se aplica primero en el teléfono y se encola para subirla después. La
+    interfaz nunca espera a la red, ni siquiera para mostrar un indicador de carga. Cuando
+    vuelve la conexión, la cola se drena sola.</p>
+  <p>Eso obliga a que las operaciones sean repetibles sin consecuencias: si el teléfono pierde
+    señal a mitad de un envío y reintenta, la dosis no puede contarse dos veces ni descontar
+    dos pastillas del inventario. Un índice único en la base de datos garantiza esa propiedad.</p>
+  <figure>
+    <svg viewBox="0 0 760 210" role="img" aria-label="Flujo de marcar una dosis: la pantalla escribe en local y encola, y más tarde sube a la base de datos">
+      <rect x="20" y="30" width="150" height="54" rx="12" fill="#fff" stroke="#E5DFD3" stroke-width="2"/>
+      <text x="95" y="62" text-anchor="middle" font-size="13" font-weight="600" fill="#1F3A3D" font-family="sans-serif">Toca el círculo</text>
+      <rect x="205" y="30" width="150" height="54" rx="12" fill="#E8EFE9" stroke="#2D6E5E" stroke-width="2"/>
+      <text x="280" y="55" text-anchor="middle" font-size="13" font-weight="600" fill="#1F3A3D" font-family="sans-serif">Guarda local</text>
+      <text x="280" y="72" text-anchor="middle" font-size="11" fill="#2D6E5E" font-family="sans-serif">responde al instante</text>
+      <rect x="390" y="30" width="150" height="54" rx="12" fill="#FBEAE3" stroke="#D4683A" stroke-width="2"/>
+      <text x="465" y="55" text-anchor="middle" font-size="13" font-weight="600" fill="#1F3A3D" font-family="sans-serif">Encola</text>
+      <text x="465" y="72" text-anchor="middle" font-size="11" fill="#D4683A" font-family="sans-serif">espera si no hay red</text>
+      <rect x="575" y="30" width="165" height="54" rx="12" fill="#1F3A3D"/>
+      <text x="657" y="55" text-anchor="middle" font-size="13" font-weight="600" fill="#FBF8F3" font-family="sans-serif">Sube y descuenta</text>
+      <text x="657" y="72" text-anchor="middle" font-size="11" fill="#FBF8F3" opacity=".75" font-family="sans-serif">en una transacción</text>
+      <path d="M176 57 L198 57" stroke="#8B7355" stroke-width="2" marker-end="url(#h)"/>
+      <path d="M361 57 L383 57" stroke="#8B7355" stroke-width="2" marker-end="url(#h)"/>
+      <path d="M546 57 L568 57" stroke="#8B7355" stroke-width="2" marker-end="url(#h)"/>
+      <rect x="20" y="120" width="720" height="60" rx="12" fill="#E8EFE9"/>
+      <text x="44" y="146" font-size="13" font-weight="700" fill="#2D6E5E" font-family="sans-serif">Repetir es seguro</text>
+      <text x="44" y="166" font-size="12" fill="#1F3A3D" font-family="sans-serif">Tres reintentos por mala señal registran una sola toma y descuentan una sola pastilla.</text>
+      <defs><marker id="h" markerWidth="9" markerHeight="9" refX="8" refY="3" orient="auto"><path d="M0,0 L0,6 L8,3 z" fill="#8B7355"/></marker></defs>
+    </svg>
+    <figcaption>El camino que más se ejecuta, y el que no puede fallar.</figcaption>
+  </figure>
+  <p>El control de acceso no vive en la aplicación sino en la base de datos. La clave pública
+    viaja dentro del programa y cualquiera puede extraerla, así que filtrar los datos en el
+    cliente no protegería nada. Cada consulta pasa por reglas que el motor aplica fila a fila:
+    un cuidador sin invitación recibe cero resultados, venga la petición de donde venga.</p>
+</section>
+
+<section>
+  <p class="num">05 — Tecnologías</p>
+  <h2>Con qué está construido</h2>
+  <table>
+    <tr><th>Pieza</th><th>Tecnología</th><th>Por qué</th></tr>
+    <tr><td>App móvil</td><td>React Native con Expo</td><td>Un solo código para Android e iOS</td></tr>
+    <tr><td>Panel web</td><td>React con Vite</td><td>Carga rápida, sin instalación</td></tr>
+    <tr><td>Base de datos</td><td>PostgreSQL</td><td>Reglas de acceso por fila en el propio motor</td></tr>
+    <tr><td>Almacén local</td><td>AsyncStorage</td><td>Permite operar sin conexión</td></tr>
+    <tr><td>Lenguaje</td><td>TypeScript</td><td>Errores detectados antes de ejecutar</td></tr>
+    <tr><td>Integración continua</td><td>GitHub Actions</td><td>Pruebas automáticas en cada cambio</td></tr>
+  </table>
+  <p>El proyecto incluye pruebas automatizadas sobre la lógica que falla en silencio —fechas,
+    colas de sincronización e idempotencia— y verificación del esquema de base de datos que se
+    ejecuta sola en cada modificación.</p>
+</section>
+
+<section>
+  <p class="num">06 — Manual de uso</p>
+  <h2>Paso a paso</h2>
+  <ol class="pasos">
+    <li><div><h3>Instalar la app en el teléfono del paciente</h3>
+      <p>Se abre por primera vez y no pide registro. La cuenta se crea sola: una persona mayor
+        no debería enfrentarse a un formulario para usar su pastillero.</p></div></li>
+    <li><div><h3>Registrar cada medicamento</h3>
+      <p>Pulsar «Agregar medicamento» e indicar el nombre, la hora de la toma, la fecha de
+        vencimiento y cuántas pastillas hay en la caja.</p></div></li>
+    <li><div><h3>Marcar las dosis cada día</h3>
+      <p>La pantalla principal muestra lo que toca hoy. Al tomar una pastilla se pulsa el
+        círculo de la derecha: se pone verde con una marca y descuenta el inventario.</p></div></li>
+    <li><div><h3>Generar el código para el cuidador</h3>
+      <p>Entrar en «Vista de cuidador» y pulsar «Invitar a un cuidador». La app muestra seis
+        caracteres grandes, pensados para dictarse por teléfono sin confusiones.</p></div></li>
+    <li><div><h3>El cuidador crea su cuenta</h3>
+      <p>Abre el panel en cualquier navegador y se registra con su correo. Tener cuenta todavía
+        no da acceso a nada: hace falta el código.</p></div></li>
+    <li><div><h3>Canjear el código y empezar a ver</h3>
+      <p>Al escribir los seis caracteres queda unido al hogar. Desde ese momento ve el estado
+        del día, y la pantalla se actualiza sola cuando el paciente marca una dosis.</p></div></li>
+  </ol>
+  <div class="destacado">
+    <p style="margin:0"><strong>Si un día no hay internet</strong>, el paciente sigue marcando
+      sus dosis con normalidad. Se guardan en el teléfono y suben solas al recuperar la señal.
+      El panel del cuidador, en cambio, avisa de que no hay conexión en lugar de mostrar datos
+      viejos: en medicación, una información caducada presentada como actual es peor que
+      ninguna información.</p>
+  </div>
+</section>
+
+<section>
+  <p class="num">07 — El cliente</p>
+  <h2>Para quién se construyó</h2>
+  <p>Pastilla se desarrolló para <strong>Ozman Carias</strong>, que necesitaba llevar el control
+    de la medicación de dos familiares mayores: su suegra y su abuela. Ambas viven solas, y él
+    quería saber si habían tomado lo del día sin tener que llamarlas cada tarde.</p>
+  <p>Ese caso real definió las decisiones más importantes. Que hubiera dos familiares, y no uno,
+    obligó a que el sistema separara los datos por hogar desde el primer día. Que ninguna de las
+    dos fuera a instalar una segunda aplicación llevó a que la mitad del cuidador fuera una
+    página web. Y que la conectividad no estuviera garantizada en sus casas es la razón de que
+    la app funcione entera sin internet.</p>
+  <p class="suave">No es un producto médico y no debe usarse como única fuente de control de un
+    tratamiento real.</p>
+</section>
+
+<section>
+  <p class="num">08 — El autor</p>
+  <h2>Quién lo construyó</h2>
+  <p><strong>Javier Torres</strong> — desarrollo completo del sistema: aplicación móvil, panel
+    web, diseño del modelo de datos, reglas de seguridad, pruebas automatizadas e
+    infraestructura de despliegue.</p>
+  <p>El proyecto es de carácter académico, desarrollado como trabajo de ingeniería de software.
+    Todo el código es público y el historial de decisiones está documentado en el repositorio,
+    incluidos los registros de arquitectura que explican qué se sacrificó en cada elección y
+    por qué.</p>
+  <table>
+    <tr><th>Recurso</th><th>Enlace</th></tr>
+    <tr><td>Producto en vivo</td><td><a href="https://amelia.lat">amelia.lat</a></td></tr>
+    <tr><td>Panel del cuidador</td><td><a href="https://amelia.lat/panel">amelia.lat/panel</a></td></tr>
+    <tr><td>Estado del servicio</td><td><a href="https://amelia.lat/api/health">amelia.lat/api/health</a></td></tr>
+    <tr><td>Código fuente</td><td><a href="https://github.com/jjtorre/Repo2_PastillaFE">github.com/jjtorre/Repo2_PastillaFE</a></td></tr>
+  </table>
+</section>
+
+</main>
+
+<footer>
+  <div class="contenedor">
+    <p style="margin:0 0 12px">Pastilla · Proyecto académico de ingeniería de software</p>
+    <p style="margin:0 0 6px;opacity:.75">Código de verificación de autoría:</p>
+    <p class="codigo" style="margin:0">LEARN-CAP-C366ADC1</p>
+  </div>
+</footer>
+
+</body>
+</html>
