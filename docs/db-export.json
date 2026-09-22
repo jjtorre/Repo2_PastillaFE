@@ -1,0 +1,366 @@
+{
+  "motor": "postgres",
+  "tablas": [
+    {
+      "filas": 91,
+      "nombre": "dose_events",
+      "indices": [
+        "dose_events_med_idx",
+        "dose_events_one_per_dose",
+        "dose_events_pkey",
+        "dose_events_sync_idx"
+      ],
+      "columnas": [
+        {
+          "pk": true,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "medication_id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "date",
+          "nombre": "scheduled_for"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "taken_at"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "timestamp with time zone",
+          "nombre": "undone_at"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "uuid",
+          "nombre": "created_by"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "text",
+          "nombre": "device_id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "created_at"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "updated_at"
+        }
+      ],
+      "relaciones": [
+        {
+          "columna": "created_by",
+          "referencia": "profiles.id"
+        },
+        {
+          "columna": "medication_id",
+          "referencia": "medications.id"
+        }
+      ],
+      "politicas_rls": [
+        "dose_events_insert",
+        "dose_events_select",
+        "dose_events_update"
+      ]
+    },
+    {
+      "filas": 6,
+      "nombre": "household_invites",
+      "indices": [
+        "household_invites_pkey"
+      ],
+      "columnas": [
+        {
+          "pk": true,
+          "nulo": false,
+          "tipo": "text",
+          "nombre": "code"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "household_id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "text",
+          "nombre": "role"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "uuid",
+          "nombre": "created_by"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "expires_at"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "timestamp with time zone",
+          "nombre": "redeemed_at"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "uuid",
+          "nombre": "redeemed_by"
+        }
+      ],
+      "relaciones": [
+        {
+          "columna": "created_by",
+          "referencia": "profiles.id"
+        },
+        {
+          "columna": "household_id",
+          "referencia": "households.id"
+        },
+        {
+          "columna": "redeemed_by",
+          "referencia": "profiles.id"
+        }
+      ],
+      "politicas_rls": [
+        "invites_delete",
+        "invites_insert",
+        "invites_select"
+      ]
+    },
+    {
+      "filas": 5,
+      "nombre": "household_members",
+      "indices": [
+        "household_members_pkey",
+        "household_members_user_idx"
+      ],
+      "columnas": [
+        {
+          "pk": true,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "household_id"
+        },
+        {
+          "pk": true,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "user_id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "text",
+          "nombre": "role"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "created_at"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "timestamp with time zone",
+          "nombre": "disabled_at"
+        }
+      ],
+      "relaciones": [
+        {
+          "columna": "household_id",
+          "referencia": "households.id"
+        },
+        {
+          "columna": "user_id",
+          "referencia": "profiles.id"
+        }
+      ],
+      "politicas_rls": [
+        "members_select"
+      ]
+    },
+    {
+      "filas": 3,
+      "nombre": "households",
+      "indices": [
+        "households_pkey"
+      ],
+      "columnas": [
+        {
+          "pk": true,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "text",
+          "nombre": "name"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "text",
+          "nombre": "timezone"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "created_at"
+        }
+      ],
+      "relaciones": [],
+      "politicas_rls": [
+        "households_select",
+        "households_update"
+      ]
+    },
+    {
+      "filas": 15,
+      "nombre": "medications",
+      "indices": [
+        "medications_pkey",
+        "medications_sync_idx"
+      ],
+      "columnas": [
+        {
+          "pk": true,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "household_id"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "text",
+          "nombre": "name"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "time without time zone",
+          "nombre": "scheduled_time"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "date",
+          "nombre": "expiration_date"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "integer",
+          "nombre": "quantity"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "created_at"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "updated_at"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "timestamp with time zone",
+          "nombre": "deleted_at"
+        }
+      ],
+      "relaciones": [
+        {
+          "columna": "household_id",
+          "referencia": "households.id"
+        }
+      ],
+      "politicas_rls": [
+        "medications_insert",
+        "medications_select",
+        "medications_update"
+      ]
+    },
+    {
+      "filas": 7,
+      "nombre": "profiles",
+      "indices": [
+        "profiles_pkey"
+      ],
+      "columnas": [
+        {
+          "pk": true,
+          "nulo": false,
+          "tipo": "uuid",
+          "nombre": "id"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "text",
+          "nombre": "email"
+        },
+        {
+          "pk": false,
+          "nulo": true,
+          "tipo": "text",
+          "nombre": "full_name"
+        },
+        {
+          "pk": false,
+          "nulo": false,
+          "tipo": "timestamp with time zone",
+          "nombre": "created_at"
+        }
+      ],
+      "relaciones": [
+        {
+          "columna": "id",
+          "referencia": "users.id"
+        }
+      ],
+      "politicas_rls": [
+        "profiles_select",
+        "profiles_update"
+      ]
+    }
+  ],
+  "generado_at": "2026-09-22T20:03:51Z"
+}
