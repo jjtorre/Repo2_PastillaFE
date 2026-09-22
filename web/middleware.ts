@@ -44,7 +44,9 @@ const PAGINA_401 = `<!doctype html>
   <body>
     <main>
       <h1>Acceso restringido</h1>
-      <p>Esta página es privada. Entra con tu cuenta para ver el estado de los medicamentos.</p>
+      <!-- Sin vocabulario del dominio a propósito: una página de denegación no
+           debe describir qué hay detrás, ni siquiera de forma genérica. -->
+      <p>Esta página es privada. Entra con tu cuenta para continuar.</p>
       <a href="/">Ir al inicio</a>
     </main>
   </body>
