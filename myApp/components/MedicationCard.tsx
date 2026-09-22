@@ -13,13 +13,20 @@ interface MedicationCardProps {
   onToggleTaken: () => void;
 }
 
+// Sufijo que acompaña a la hora según el estado. Como tabla y no como
+// ternario encadenado: los tres casos quedan a la vista uno debajo de otro.
+const SUFIJO_HORA: Record<Medication['status'], string> = {
+  late: ' · atrasado',
+  taken: ' · tomado',
+  pending: '',
+};
+
 export default function MedicationCard({ medication, onPress, onToggleTaken }: Readonly<MedicationCardProps>) {
   const { name, time, status } = medication;
 
   const barColor = status === 'late' ? colors.warning : colors.primary;
   const timeColor = status === 'late' ? colors.warning : colors.textSecondary;
-  const timeLabel =
-    status === 'late' ? `${time} · atrasado` : status === 'taken' ? `${time} · tomado` : time;
+  const timeLabel = `${time}${SUFIJO_HORA[status]}`;
 
   return (
     <Pressable

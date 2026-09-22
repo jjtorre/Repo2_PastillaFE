@@ -17,6 +17,36 @@ type Props = NativeStackScreenProps<RootStackParamList, 'CaregiverView'>;
 
 const STATUS_ORDER: Record<MedicationStatus, number> = { late: 0, pending: 1, taken: 2 };
 
+// Todo lo que cambia según el estado, en un solo sitio.
+//
+// Antes esto vivía como ternarios encadenados dentro del renderItem: uno para
+// el texto, otro para el fondo, otro para el color y otro para el icono. Cada
+// uno repetía la misma pregunta con las ramas en distinto orden, así que para
+// saber qué se ve en un estado había que leer las cuatro y cruzarlas.
+const APARIENCIA: Record<
+  MedicationStatus,
+  { etiqueta: string; icono: string; color: string; fondo: string }
+> = {
+  late: {
+    etiqueta: 'No tomado',
+    icono: '!',
+    color: colors.warning,
+    fondo: colors.warningBg,
+  },
+  taken: {
+    etiqueta: 'Tomado',
+    icono: '✓',
+    color: colors.success,
+    fondo: colors.successBg,
+  },
+  pending: {
+    etiqueta: 'Pendiente',
+    icono: '·',
+    color: colors.textSecondary,
+    fondo: colors.divider,
+  },
+};
+
 export default function CaregiverViewScreen({ navigation }: Props) {
   const [medications, setMedications] = useState<Medication[]>([]);
 
@@ -54,34 +84,16 @@ export default function CaregiverViewScreen({ navigation }: Props) {
           data={medications}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => {
-            const isLate = item.status === 'late';
-            const isTaken = item.status === 'taken';
-            const detail = isTaken
-              ? `Tomado · ${item.time}`
-              : isLate
-              ? `No tomado · ${item.time}`
-              : `Pendiente · ${item.time}`;
+            const apariencia = APARIENCIA[item.status];
             return (
               <View style={styles.row}>
-                <View
-                  style={[
-                    styles.iconCircle,
-                    { backgroundColor: isLate ? colors.warningBg : isTaken ? colors.successBg : colors.divider },
-                  ]}
-                >
-                  <Text style={{ color: isLate ? colors.warning : isTaken ? colors.success : colors.textSecondary }}>
-                    {isLate ? '!' : isTaken ? '✓' : '·'}
-                  </Text>
+                <View style={[styles.iconCircle, { backgroundColor: apariencia.fondo }]}>
+                  <Text style={{ color: apariencia.color }}>{apariencia.icono}</Text>
                 </View>
                 <View style={styles.rowInfo}>
                   <Text style={styles.rowName}>{item.name}</Text>
-                  <Text
-                    style={[
-                      styles.rowDetail,
-                      { color: isLate ? colors.warning : isTaken ? colors.success : colors.textSecondary },
-                    ]}
-                  >
-                    {detail}
+                  <Text style={[styles.rowDetail, { color: apariencia.color }]}>
+                    {apariencia.etiqueta} · {item.time}
                   </Text>
                 </View>
               </View>

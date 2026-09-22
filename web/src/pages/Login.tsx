@@ -41,6 +41,13 @@ export default function Login({ onBack }: Readonly<Props>) {
     setLoading(false);
   };
 
+  // Tres estados excluyentes, resueltos antes del JSX. Encadenados dentro del
+  // botón obligaban a leer dos condiciones para saber qué texto sale.
+  let textoBoton: string;
+  if (loading) textoBoton = 'Un momento…';
+  else if (mode === 'signin') textoBoton = 'Entrar';
+  else textoBoton = 'Crear cuenta';
+
   return (
     <div className="centered">
       <h2>Panel del cuidador</h2>
@@ -74,7 +81,7 @@ export default function Login({ onBack }: Readonly<Props>) {
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? 'Un momento…' : mode === 'signin' ? 'Entrar' : 'Crear cuenta'}
+          {textoBoton}
         </button>
       </form>
 
