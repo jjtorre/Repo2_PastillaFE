@@ -31,6 +31,17 @@ interface Miembro {
   role: string;
   nombre: string;
   email: string;
+  disabledAt: string | null;
+}
+
+// Administradores del hogar: el paciente, porque los datos son suyos, y quien
+// lo gestiona sin ser el paciente. Un cuidador observa, no administra.
+const ROLES_ADMIN = ['patient', 'admin'];
+
+function etiquetaRol(role: string): string {
+  if (role === 'patient') return 'Paciente';
+  if (role === 'admin') return 'Administrador';
+  return 'Cuidador';
 }
 
 interface Invitacion {
@@ -101,7 +112,7 @@ export default function Account({ onBack, onSignOut }: Props) {
 
       const { data: ms } = await supabase
         .from('household_members')
-        .select('user_id, role, profiles(full_name, email)')
+        .select('user_id, role, disabled_at, profiles(full_name, email)')
         .eq('household_id', casa.id);
 
       setMiembros(
@@ -112,6 +123,7 @@ export default function Account({ onBack, onSignOut }: Props) {
             role: row.role as string,
             nombre: perf?.full_name ?? 'Sin nombre',
             email: perf?.email ?? '',
+            disabledAt: (row.disabled_at as string | null) ?? null,
           };
         })
       );
@@ -202,6 +214,34 @@ export default function Account({ onBack, onSignOut }: Props) {
     }
   };
 
+  // Deshabilitar retira el acceso de verdad: is_household_member() deja de
+  // reconocer a esa persona, así que pierde medicamentos, dosis y vistas de
+  // una sola vez. No es un botón que solo esconda cosas en esta pantalla.
+  const cambiarAcceso = async (userId: string, deshabilitar: boolean) => {
+    setError(null);
+    setAviso(null);
+    if (!hogar) return;
+
+    const { error: err } = await supabase.rpc('set_member_disabled', {
+      p_household_id: hogar.id,
+      p_user_id: userId,
+      p_disabled: deshabilitar,
+    });
+
+    if (err) {
+      // Los mensajes vienen de la función y ya explican el motivo: que no eres
+      // administrador, que no puedes dejarte fuera a ti mismo, o que el hogar
+      // se quedaría sin nadie que lo gestione.
+      setError(err.message);
+      return;
+    }
+
+    setAviso(deshabilitar ? 'Acceso retirado.' : 'Acceso restaurado.');
+    void cargar();
+  };
+
+  const soyAdmin = hogar ? ROLES_ADMIN.includes(hogar.miRol) : false;
+
   const pendientes = invitaciones.filter(
     (i) => !i.redeemed_at && new Date(i.expires_at) > new Date()
   );
@@ -269,17 +309,44 @@ export default function Account({ onBack, onSignOut }: Props) {
                 </div>
 
                 <p className="section-title">Quién tiene acceso</p>
-                {miembros.map((m) => (
-                  <div className="med-row" key={m.user_id}>
-                    <div className="med-info">
-                      <p className="med-name">{m.nombre}</p>
-                      <p className="med-detail is-pending">{m.email}</p>
+                {miembros.map((m) => {
+                  const inactivo = m.disabledAt !== null;
+                  const esYo = m.user_id === perfil?.id;
+                  return (
+                    <div
+                      className="med-row"
+                      key={m.user_id}
+                      style={inactivo ? { opacity: 0.55 } : undefined}
+                    >
+                      <div className="med-info">
+                        <p className="med-name">
+                          {m.nombre}
+                          {esYo && <span className="muted"> · tú</span>}
+                        </p>
+                        <p className={inactivo ? 'med-detail is-late' : 'med-detail is-pending'}>
+                          {inactivo
+                            ? `Acceso retirado el ${formatearFecha(m.disabledAt!)}`
+                            : m.email}
+                        </p>
+                      </div>
+                      <div className="med-adherence">{etiquetaRol(m.role)}</div>
+
+                      {/* Solo los administradores ven estos botones, y nunca
+                          sobre su propia fila: la función rechaza que alguien
+                          se deje fuera de su propio hogar. */}
+                      {soyAdmin && !esYo && (
+                        <button
+                          type="button"
+                          className="link"
+                          style={{ width: 'auto', padding: '8px 16px', marginTop: 0 }}
+                          onClick={() => cambiarAcceso(m.user_id, !inactivo)}
+                        >
+                          {inactivo ? 'Reactivar' : 'Deshabilitar'}
+                        </button>
+                      )}
                     </div>
-                    <div className="med-adherence">
-                      {m.role === 'patient' ? 'Paciente' : 'Cuidador'}
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
 
                 <p className="section-title">Invitaciones pendientes</p>
                 {pendientes.length === 0 && (

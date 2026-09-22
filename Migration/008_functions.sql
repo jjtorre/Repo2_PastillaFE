@@ -102,6 +102,76 @@ begin
 end;
 $fn$;
 
+-- Deshabilita o reactiva a un miembro del hogar.
+--
+-- Va por RPC y no por una policy de UPDATE porque las reglas son
+-- condicionales, y una policy solo sabe decir si o no. Concentrarlas aqui
+-- significa que valen igual llamando desde la web, desde la app o desde
+-- cualquier cliente futuro.
+--
+-- Es idempotente: deshabilitar a quien ya estaba deshabilitado conserva la
+-- fecha original en lugar de moverla, asi que reintentar no falsea cuando se
+-- retiro el acceso.
+create or replace function public.set_member_disabled(
+  p_household_id uuid,
+  p_user_id      uuid,
+  p_disabled     boolean
+)
+returns void
+language plpgsql
+security definer
+set search_path = public
+as $fn$
+declare
+  v_role           text;
+  v_disabled_at    timestamptz;
+  v_admins_activos int;
+begin
+  if not public.is_household_admin(p_household_id) then
+    raise exception 'solo un administrador del hogar puede cambiar el acceso';
+  end if;
+
+  -- Sin esto, un administrador podria dejarse fuera de su propio hogar y no
+  -- habria forma de volver a entrar desde la aplicacion.
+  if p_user_id = auth.uid() then
+    raise exception 'no puedes deshabilitar tu propio acceso';
+  end if;
+
+  select role, disabled_at into v_role, v_disabled_at
+    from public.household_members
+   where household_id = p_household_id and user_id = p_user_id;
+
+  if v_role is null then
+    raise exception 'esa persona no pertenece a este hogar';
+  end if;
+
+  -- Red de seguridad: un hogar sin ningun administrador activo quedaria
+  -- huerfano, sin nadie que pueda invitar ni reactivar a los demas.
+  --
+  -- El "v_disabled_at is null" importa: sin el, volver a deshabilitar a un
+  -- administrador que YA estaba deshabilitado dispararia este error, cuando
+  -- lo correcto es que no haga nada.
+  if p_disabled and v_disabled_at is null and v_role in ('patient', 'admin') then
+    select count(*) into v_admins_activos
+      from public.household_members
+     where household_id = p_household_id
+       and disabled_at is null
+       and role in ('patient', 'admin');
+
+    if v_admins_activos <= 1 then
+      raise exception 'el hogar se quedaria sin ningun administrador activo';
+    end if;
+  end if;
+
+  update public.household_members
+     set disabled_at = case
+                         when p_disabled then coalesce(disabled_at, now())
+                         else null
+                       end
+   where household_id = p_household_id and user_id = p_user_id;
+end;
+$fn$;
+
 -- "Que dia es hoy" SEGUN EL HOGAR, no segun UTC ni segun el reloj del cliente.
 --
 -- Esta funcion existe por un bug real detectado en pruebas: con UTC-6, toda

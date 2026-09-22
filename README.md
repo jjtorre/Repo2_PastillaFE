@@ -82,11 +82,33 @@ panel de monitoreo es solo lectura:
 - **Hogar:** nombre editable y zona horaria. El nombre importa cuando se
   acompaña a más de un familiar.
 - **Quién tiene acceso:** todos los miembros del hogar con su rol.
+- **Control de acceso:** un administrador puede **deshabilitar** a un cuidador
+  y volver a reactivarlo.
 - **Invitaciones:** generar códigos nuevos y revocar los que siguen sin usar.
 
-Una invitación **ya canjeada no se puede borrar**: es el registro de cómo
-entró un miembro al hogar, y permitir borrarla dejaría tapar ese rastro. La
-regla vive en la base de datos, no en la interfaz.
+### Roles
+
+| Rol | Puede |
+|---|---|
+| `patient` | Administrar el hogar. Los datos son suyos |
+| `admin` | Administrar el hogar sin ser quien toma las pastillas |
+| `caregiver` | Consultar el panel |
+
+Deshabilitar a alguien **no es un botón que esconda cosas en una pantalla**.
+La comprobación de pertenencia que usan todas las reglas de acceso deja de
+reconocer a esa persona, así que pierde medicamentos, dosis, inventario y
+vistas de una sola vez, y también deja de poder escribir. Está verificado
+desactivando esa condición a propósito: sin ella, un cuidador deshabilitado
+vuelve a verlo todo y las pruebas fallan.
+
+Dos reglas protegen el hogar de quedarse sin gobierno: nadie puede retirarse
+el acceso a sí mismo, y no se puede dejar el hogar sin ningún administrador
+activo.
+
+Ni las membresías ni las invitaciones canjeadas se borran nunca. Son el
+registro de quién tuvo acceso a datos médicos y cuándo se le retiró; permitir
+borrarlas dejaría tapar ese rastro. Todas estas reglas viven en la base de
+datos, no en la interfaz.
 
 ---
 

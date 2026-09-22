@@ -31,6 +31,32 @@ create table if not exists public.household_members (
 create index if not exists household_members_user_idx
   on public.household_members (user_id);
 
+-- ---------------------------------------------------------------------------
+-- Anadidos posteriores a la creacion original de la tabla.
+--
+-- "create table if not exists" no toca una tabla que ya existe, asi que en una
+-- base ya desplegada estas dos sentencias son las que aplican el cambio. Van
+-- aparte para que el script siga siendo re-ejecutable.
+-- ---------------------------------------------------------------------------
+
+-- Deshabilitar a alguien NO borra su fila: se conserva quien fue y cuando
+-- entro. Es el mismo criterio que con las invitaciones canjeadas — el rastro
+-- de quien tuvo acceso a datos medicos no debe poder borrarse.
+alter table public.household_members
+  add column if not exists disabled_at timestamptz;
+
+-- El rol 'admin' se suma a los dos originales. Administradores del hogar son
+-- 'patient' y 'admin': el paciente porque los datos son suyos, y 'admin' para
+-- quien monta y gestiona el hogar sin ser quien toma las pastillas.
+--
+-- Postgres nombra el check en linea como <tabla>_<columna>_check, asi que se
+-- elimina por ese nombre antes de recrearlo.
+alter table public.household_members
+  drop constraint if exists household_members_role_check;
+alter table public.household_members
+  add constraint household_members_role_check
+  check (role in ('patient', 'caregiver', 'admin'));
+
 -- Codigo de un solo uso para que el cuidador se una al hogar desde la web.
 create table if not exists public.household_invites (
   code         text primary key,
@@ -41,3 +67,11 @@ create table if not exists public.household_invites (
   redeemed_at  timestamptz,
   redeemed_by  uuid references public.profiles(id)
 );
+
+-- Mismo motivo que en household_members: el rol 'admin' es posterior, asi que
+-- el check hay que rehacerlo para las bases que ya existen.
+alter table public.household_invites
+  drop constraint if exists household_invites_role_check;
+alter table public.household_invites
+  add constraint household_invites_role_check
+  check (role in ('patient', 'caregiver', 'admin'));

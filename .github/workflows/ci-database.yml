@@ -78,7 +78,7 @@ jobs:
 
       - name: Pruebas de comportamiento
         run: |
-          for f in Migration/tests/0[234]_*.sql; do
+          for f in Migration/tests/0[2-9]_*.sql; do
             echo "::group::$(basename "$f")"
             psql -v ON_ERROR_STOP=1 -q -f "$f"
             echo "::endgroup::"

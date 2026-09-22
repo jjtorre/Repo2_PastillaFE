@@ -14,6 +14,10 @@
 -- en recursion infinita. Al ejecutarse como owner, esta funcion salta el RLS
 -- de esa tabla y corta el ciclo. Es el error numero uno al montar RLS
 -- multi-tenant en Supabase.
+-- "disabled_at is null" es lo que hace que deshabilitar a alguien surta efecto
+-- EN TODAS PARTES de una sola vez. Como cada policy pasa por aqui, revocar el
+-- acceso a medicamentos, dosis, invitaciones y vistas es una unica condicion,
+-- no una lista de sitios que recordar actualizar.
 create or replace function public.is_household_member(hid uuid)
 returns boolean
 language sql
@@ -23,7 +27,27 @@ stable
 as $fn$
   select exists (
     select 1 from public.household_members
-    where household_id = hid and user_id = auth.uid()
+    where household_id = hid
+      and user_id = auth.uid()
+      and disabled_at is null
+  );
+$fn$;
+
+-- Administradores del hogar: el paciente, porque los datos son suyos, y quien
+-- lo gestiona sin ser el paciente. Un 'caregiver' observa, no administra.
+create or replace function public.is_household_admin(hid uuid)
+returns boolean
+language sql
+security definer
+set search_path = public
+stable
+as $fn$
+  select exists (
+    select 1 from public.household_members
+    where household_id = hid
+      and user_id = auth.uid()
+      and disabled_at is null
+      and role in ('patient', 'admin')
   );
 $fn$;
 
