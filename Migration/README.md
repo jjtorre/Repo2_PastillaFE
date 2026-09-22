@@ -83,7 +83,7 @@ sincronización no arranca.
 
 ```bash
 cd myApp
-cp .env.example .env.local     # rellena URL y clave anon
+cp env.example .env.local     # rellena URL y clave anon
 npx expo start --clear         # --clear es necesario: Expo cachea las variables
 ```
 

@@ -15,7 +15,7 @@ Requiere que el esquema esté aplicado: ver [`../Migration/README.md`](../Migrat
 ```bash
 cd web
 npm install
-cp .env.example .env.local     # rellena los dos valores
+cp env.example .env.local     # rellena los dos valores
 npm run dev
 ```
 

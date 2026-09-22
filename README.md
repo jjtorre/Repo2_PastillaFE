@@ -165,7 +165,7 @@ Detalle completo en [`Migration/README.md`](Migration/README.md).
 ```bash
 cd myApp
 npm install
-cp .env.example .env.local     # rellena URL y clave anon
+cp env.example .env.local     # rellena URL y clave anon
 npx expo start --android       # o --ios
 ```
 
@@ -174,7 +174,7 @@ npx expo start --android       # o --ios
 ```bash
 cd web
 npm install
-cp .env.example .env.local     # los MISMOS valores, con prefijo VITE_
+cp env.example .env.local     # los MISMOS valores, con prefijo VITE_
 npm run dev
 ```
 

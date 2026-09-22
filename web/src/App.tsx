@@ -31,6 +31,27 @@ import Account from './pages/Account';
 const RUTA_PANEL = '/panel';
 const RUTA_CUENTA = '/panel/cuenta';
 
+// Marca visible para el servidor de que hay sesión.
+//
+// Supabase guarda la sesión en localStorage, que el borde no puede leer, así
+// que sin esto middleware.ts no podría distinguir a nadie y /panel se
+// serviría a cualquiera.
+//
+// NO es una credencial: no autoriza nada. Quien la falsifique recibe la
+// aplicación vacía, porque los datos los sigue filtrando la seguridad por fila
+// de la base. Por eso no lleva información alguna, solo un "1".
+const COOKIE_SESION = 'pastilla_sesion';
+
+function marcarSesion(activa: boolean) {
+  if (activa) {
+    // 30 días: más que la vida del token, para que un refresco de sesión no
+    // deje la marca caducada y provoque un 401 a alguien que sí tiene sesión.
+    document.cookie = `${COOKIE_SESION}=1; path=/; max-age=${60 * 60 * 24 * 30}; SameSite=Lax`;
+  } else {
+    document.cookie = `${COOKIE_SESION}=; path=/; max-age=0; SameSite=Lax`;
+  }
+}
+
 function Cargando() {
   return (
     <div className="centered">
@@ -52,11 +73,13 @@ export default function App() {
 
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
+      marcarSesion(data.session !== null);
       setReady(true);
     });
 
     const { data: sub } = supabase.auth.onAuthStateChange((_event, next) => {
       setSession(next);
+      marcarSesion(next !== null);
       // Al cambiar de usuario hay que volver a preguntar por el hogar: el
       // anterior no dice nada del nuevo.
       setHasHousehold(null);
