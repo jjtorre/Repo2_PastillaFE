@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "myApp",
+    "name": "Pastilla",
     "slug": "myApp",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -10,15 +10,20 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#FBF8F3"
+      "//": "Verde, no crema: la imagen del splash trae su propio fondo verde, y con un fondo claro se veria un cuadrado flotando.",
+      "backgroundColor": "#2D6E5E"
     },
     "ios": {
-      "supportsTablet": false
+      "supportsTablet": false,
+      "bundleIdentifier": "lat.amelia.pastilla"
     },
     "android": {
+      "//": "El identificador del paquete es obligatorio para compilar. Se deriva del dominio al reves, que es la convencion.",
+      "package": "lat.amelia.pastilla",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#FBF8F3"
+        "//": "Mismo verde que la imagen: si el lanzador deja margen al recortar, no aparece un borde de otro color.",
+        "backgroundColor": "#2D6E5E"
       }
     },
     "web": {
