@@ -120,3 +120,48 @@ myApp/
 - `types.ts` tipa `RootStackParamList`, así que
   `navigation.navigate('MedicationDetail', { id })` tiene autocompletado
   y TypeScript marca error si falta el `id`.
+
+---
+
+## Compilar para instalarlo en un teléfono
+
+Expo Go sirve para desarrollar, pero muestra **su propio icono**: para ver el
+de la app hace falta compilar un APK.
+
+```bash
+eas login
+
+# Las credenciales NO viajan solas: .env.local esta gitignorado y EAS sube el
+# proyecto segun git, asi que sin esto se compila una app que no sincroniza.
+eas env:create --scope project --name EXPO_PUBLIC_SUPABASE_URL \
+  --value "https://TU-PROYECTO.supabase.co" \
+  --environment preview --environment production \
+  --visibility plaintext --non-interactive
+
+eas env:create --scope project --name EXPO_PUBLIC_SUPABASE_ANON_KEY \
+  --value "TU_CLAVE_ANON" \
+  --environment preview --environment production \
+  --visibility plaintext --non-interactive
+
+eas build --platform android --profile preview
+```
+
+Al terminar, EAS da una URL: ábrela desde el navegador del teléfono, descarga
+el APK e instálalo.
+
+### Por qué la configuración es como es
+
+Estas notas van aquí y no dentro de los archivos porque **JSON no admite
+comentarios**, y tanto el esquema de EAS como el de Vercel rechazan cualquier
+propiedad que no reconozcan: una clave inventada invalida el archivo entero.
+
+- **`buildType: apk`** en el perfil `preview`. El formato por defecto es AAB,
+  que solo sirve para subir a Google Play y no se puede instalar tocándolo.
+- **`android.package`** es obligatorio para compilar. Se usa el dominio al
+  revés, que es la convención.
+- **Fondo verde** en el splash y en el icono adaptativo. Ambas imágenes traen
+  su propio fondo verde; con un fondo claro se vería un cuadrado flotando, y
+  el margen que deja Android al recortar enmarcaría el icono en otro color.
+- **`visibility: plaintext`** en las variables. Las que empiezan por
+  `EXPO_PUBLIC_` se incrustan en el paquete de la app, así que declararlas
+  como secretas sugeriría una protección que no existe.

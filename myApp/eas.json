@@ -5,7 +5,6 @@
   },
   "build": {
     "preview": {
-      "//": "Perfil para instalar en un telefono propio. Produce un APK, que se instala con un toque; el formato AAB por defecto solo sirve para subir a Google Play.",
       "android": {
         "buildType": "apk"
       },

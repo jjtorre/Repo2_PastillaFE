@@ -10,7 +10,6 @@
     "splash": {
       "image": "./assets/splash-icon.png",
       "resizeMode": "contain",
-      "//": "Verde, no crema: la imagen del splash trae su propio fondo verde, y con un fondo claro se veria un cuadrado flotando.",
       "backgroundColor": "#2D6E5E"
     },
     "ios": {
@@ -18,11 +17,9 @@
       "bundleIdentifier": "lat.amelia.pastilla"
     },
     "android": {
-      "//": "El identificador del paquete es obligatorio para compilar. Se deriva del dominio al reves, que es la convencion.",
       "package": "lat.amelia.pastilla",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "//": "Mismo verde que la imagen: si el lanzador deja margen al recortar, no aparece un borde de otro color.",
         "backgroundColor": "#2D6E5E"
       }
     },
